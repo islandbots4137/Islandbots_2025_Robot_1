@@ -31,6 +31,7 @@ public class Teleop extends LinearOpMode {
         slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
 
         int startpos = 0;
+        int testpos = -1000;
         slideRotate.setTargetPosition(startpos);
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -43,8 +44,8 @@ public class Teleop extends LinearOpMode {
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
             double a = -gamepad2.right_stick_y;
-            double b = gamepad2.left_stick_y * 1.1;
-            boolean c = gamepad2.square;
+            //double b = gamepad2.left_stick_y * 1.1;
+            //boolean c = gamepad2.square;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
@@ -55,10 +56,14 @@ public class Teleop extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
             double slideExtendPower = (a);
-            double slideRotatePower = (b);
+            //double slideRotatePower = (b);
             if (gamepad2.square) {
                 //setToPosition
-                slideRotate.setTargetPosition(startpos);
+                slideRotate.setTargetPosition(-500);
+            }
+            if (gamepad2.triangle) {
+                //setToPosition
+                slideRotate.setTargetPosition(testpos);
             }
 
 
@@ -68,7 +73,8 @@ public class Teleop extends LinearOpMode {
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
             slideExtend.setPower(slideExtendPower);
-            slideRotate.setPower(slideRotatePower);
+            //slideRotate.setPower(slideRotatePower);
+            slideRotate.setPower(0.5);
 
 
 
