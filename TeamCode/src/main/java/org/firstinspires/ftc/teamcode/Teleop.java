@@ -27,7 +27,7 @@ public class Teleop extends LinearOpMode {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         slideExtend.setDirection(DcMotorSimple.Direction.FORWARD);
-        slideRotate.setDirection(DcMotorSimple.Direction.FORWARD);
+        slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -37,6 +37,9 @@ public class Teleop extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
+            double a = -gamepad2.right_stick_y;
+            double b = gamepad2.left_stick_y * 1.1;
+            //boolean c = gamepad2.square;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
@@ -46,18 +49,19 @@ public class Teleop extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
+            double slideExtendPower = (a);
+            double slideRotatePower = (b);
+            //if gamepad2.square = True;
+
+
 
             frontLeftMotor.setPower(frontLeftPower);
             backLeftMotor.setPower(backLeftPower);
             frontRightMotor.setPower(frontRightPower);
             backRightMotor.setPower(backRightPower);
+            slideExtend.setPower(slideExtendPower);
+            slideRotate.setPower(slideRotatePower);
 
-
-            double a = -gamepad2.left_stick_y; // Remember, Y stick value is reversed
-            double b = gamepad2.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rb = gamepad2.right_stick_x;
-            double slideExtend = y;
-            double slideRotate = rx;
 
         }
     }
