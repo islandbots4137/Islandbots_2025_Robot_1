@@ -18,6 +18,7 @@ public class Teleop extends LinearOpMode {
         DcMotor slideExtend = hardwareMap.dcMotor.get("slideExtend");
         DcMotor slideRotate = hardwareMap.dcMotor.get("slideRotate");
 
+
         // Reverse the right side motors. This may be wrong for your setup.
         // If your robot moves backwards when commanded to go forwards,
         // reverse the left side instead.
@@ -29,6 +30,10 @@ public class Teleop extends LinearOpMode {
         slideExtend.setDirection(DcMotorSimple.Direction.FORWARD);
         slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        int startpos = 0;
+        slideRotate.setTargetPosition(startpos);
+        slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -39,7 +44,7 @@ public class Teleop extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
             double a = -gamepad2.right_stick_y;
             double b = gamepad2.left_stick_y * 1.1;
-            //boolean c = gamepad2.square;
+            boolean c = gamepad2.square;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
@@ -51,7 +56,10 @@ public class Teleop extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
             double slideExtendPower = (a);
             double slideRotatePower = (b);
-            //if gamepad2.square = True;
+            if (gamepad2.square) {
+                //setToPosition
+                slideRotate.setTargetPosition(startpos);
+            }
 
 
 
@@ -61,6 +69,7 @@ public class Teleop extends LinearOpMode {
             backRightMotor.setPower(backRightPower);
             slideExtend.setPower(slideExtendPower);
             slideRotate.setPower(slideRotatePower);
+
 
 
         }
