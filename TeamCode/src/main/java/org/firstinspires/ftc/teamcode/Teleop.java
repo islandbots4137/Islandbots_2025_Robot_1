@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class Teleop extends LinearOpMode {
@@ -17,6 +18,8 @@ public class Teleop extends LinearOpMode {
         DcMotor backRightMotor = hardwareMap.dcMotor.get("rightBack");
         DcMotor slideExtend = hardwareMap.dcMotor.get("slideExtend");
         DcMotor slideRotate = hardwareMap.dcMotor.get("slideRotate");
+        Servo clawRotate = hardwareMap.servo.get("clawRotate");
+        Servo grabber = hardwareMap.servo.get("grabber");
 
 
         // Reverse the right side motors. This may be wrong for your setup.
@@ -27,17 +30,31 @@ public class Teleop extends LinearOpMode {
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        slideExtend.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        clawRotate.setDirection(Servo.Direction.FORWARD);
+        grabber.setDirection(Servo.Direction.FORWARD);
+
+        slideExtend.setDirection(DcMotorSimple.Direction.REVERSE);
         slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
 
         int startpos = 0;
-        int testpos = -4000;
+        int mediumpos = -1100;
+        int maxpos = -5000;
+        double grabber_rotate =.5;
+        double grabber_open = .3;
+        double grabber_close = .7;
+        int maxSlideExtend = 2395;
+
+
         slideRotate.setTargetPosition(startpos);
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        slideExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
+        grabber.setPosition(grabber_open);
+        clawRotate.setPosition(.5);
 
         waitForStart();
 
@@ -70,19 +87,44 @@ public class Teleop extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
             double slideExtendPower = (a);
             //double slideRotatePower = (b);
-            if (gamepad2.square) {
+            if (gamepad2.cross) {
                 //setToPosition
-                slideRotate.setTargetPosition(0);
+                slideRotate.setTargetPosition(startpos);
             }
             if (gamepad2.triangle) {
                 //setToPosition
-                slideRotate.setTargetPosition(testpos);
+                slideRotate.setTargetPosition(maxpos);
             }
-            if (gamepad2.cross) {
+            if (gamepad2.square) {
                 //setToPosition
-                slideRotate.setTargetPosition(-750);
+                slideRotate.setTargetPosition(mediumpos);
             }
+            if (gamepad2.circle) {
+                slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slideExtend.setTargetPosition(0);
+                slideRotate.setTargetPosition(mediumpos);
+                while (slideExtend.isBusy() || slideRotate.isBusy()) {
+                    slideExtend.setPower(1.0);  // Move towards target
+                    slideRotate.setPower(1.0);
+                    telemetry.addData("Slide Extend is Busy", slideExtend.isBusy());
+                }
 
+                slideExtend.setPower(0);  // Stop when target is reached
+                slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            }
+            if (gamepad2.right_bumper) {
+                grabber.setPosition(grabber_open);
+            }
+            if (gamepad2.left_bumper) {
+                grabber.setPosition(grabber_close);
+            }
+            if (gamepad1.left_bumper) {
+                clawRotate.setPosition(grabber_rotate);
+            }
+            if (gamepad1.right_bumper) {
+                clawRotate.setPosition(startpos);
+            }
 
 
             frontLeftMotor.setPower(frontLeftPower);
@@ -93,16 +135,36 @@ public class Teleop extends LinearOpMode {
             //telemetry.update();
             //telemetry.addData("Right Stick Y (Gamepad 2)", gamepad2.right_stick_y);
             //telemetry.update();
-            slideExtend.setPower(slideExtendPower);
+
+//            slideExtend.setPower(slideExtendPower);
+            double position_x = slideExtend.getCurrentPosition();
+
+
+            if (position_x < maxSlideExtend) {
+                slideExtend.setPower(slideExtendPower);
+            } else if (slideExtendPower < 0 && position_x >= maxSlideExtend) {
+                slideExtend.setPower(slideExtendPower);
+            } else {
+                slideExtend.setPower(0);
+
+
+        }
+//            if (slideExtendPower < 0 && position_x >= 2395);
+//                slideExtend.setPower(slideExtendPower);
+//            if (slideExtendPower > 0 && position_x >= 2395);
+//                slideExtend.setPower(0);
             //slideRotate.setPower(slideRotatePower);
             if (slideRotate.isBusy()) {
-                slideRotate.setPower(0.8);  // Move towards target
+                slideRotate.setPower(1);  // Move towards target
             } else {
                 slideRotate.setPower(0);  // Stop when target is reached
             }
 
+            double clawPower = .5;
+            double GrabberPower = .5;
 
 
         }
     }
+
 }
