@@ -43,7 +43,7 @@ public class Teleop extends LinearOpMode {
         double grabber_rotate =.5;
         double grabber_open = .3;
         double grabber_close = .7;
-        int maxSlideExtend = 2395;
+        int maxSlideExtend = 2370;
 
 
         slideRotate.setTargetPosition(startpos);
@@ -140,15 +140,22 @@ public class Teleop extends LinearOpMode {
             double position_x = slideExtend.getCurrentPosition();
 
 
-            if (position_x < maxSlideExtend) {
+            if (position_x < maxSlideExtend && position_x > 0) {
                 slideExtend.setPower(slideExtendPower);
             } else if (slideExtendPower < 0 && position_x >= maxSlideExtend) {
                 slideExtend.setPower(slideExtendPower);
+            } else if (slideExtendPower > 0 && position_x < maxSlideExtend) {
+                slideExtend.setPower(slideExtendPower);
+            } else if (slideExtendPower < 0 && position_x > 0) {
+                slideExtend.setPower(slideExtendPower);
             } else {
                 slideExtend.setPower(0);
+            }
 
 
-        }
+
+
+
 //            if (slideExtendPower < 0 && position_x >= 2395);
 //                slideExtend.setPower(slideExtendPower);
 //            if (slideExtendPower > 0 && position_x >= 2395);
