@@ -42,7 +42,7 @@ public class Teleop extends LinearOpMode {
         int maxpos = -5000;
         double grabber_rotate =.5;
         double grabber_open = .3;
-        double grabber_close = .7;
+        double grabber_close = .8;
         int maxSlideExtend = 2370;
 
 
@@ -103,16 +103,29 @@ public class Teleop extends LinearOpMode {
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 slideExtend.setTargetPosition(0);
                 slideRotate.setTargetPosition(mediumpos);
+                slideExtend.setPower(1.0);  // Move towards target
+                slideRotate.setPower(1.0);
                 while (slideExtend.isBusy() || slideRotate.isBusy()) {
-                    slideExtend.setPower(1.0);  // Move towards target
-                    slideRotate.setPower(1.0);
                     telemetry.addData("Slide Extend is Busy", slideExtend.isBusy());
+                    slideExtend.setTargetPosition(0);
+                    slideExtend.setPower(1.0);
+                    y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+                    x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+                    rx = gamepad1.right_stick_x;
+                    frontLeftPower = (y + x + rx) / denominator;
+                    backLeftPower = (y - x + rx) / denominator;
+                    frontRightPower = (y - x - rx) / denominator;
+                    backRightPower = (y + x - rx) / denominator;
+                    frontLeftMotor.setPower(frontLeftPower);
+                    backLeftMotor.setPower(backLeftPower);
+                    frontRightMotor.setPower(frontRightPower);
+                    backRightMotor.setPower(backRightPower);
+                    }
+                slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
 
-                slideExtend.setPower(0);  // Stop when target is reached
-                slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            }
+
             if (gamepad2.right_bumper) {
                 grabber.setPosition(grabber_open);
             }
@@ -140,13 +153,13 @@ public class Teleop extends LinearOpMode {
             double position_x = slideExtend.getCurrentPosition();
 
 
-            if (position_x < maxSlideExtend && position_x > 0) {
+            if (position_x < maxSlideExtend && position_x > 20) {
                 slideExtend.setPower(slideExtendPower);
             } else if (slideExtendPower < 0 && position_x >= maxSlideExtend) {
                 slideExtend.setPower(slideExtendPower);
             } else if (slideExtendPower > 0 && position_x < maxSlideExtend) {
                 slideExtend.setPower(slideExtendPower);
-            } else if (slideExtendPower < 0 && position_x > 0) {
+            } else if (slideExtendPower < 0 && position_x > 20) {
                 slideExtend.setPower(slideExtendPower);
             } else {
                 slideExtend.setPower(0);
