@@ -40,13 +40,14 @@ public class Teleop extends LinearOpMode {
         int startpos = 0;
         int mediumpos = -1100;
         int maxpos = -5000;
-        double grabber_rotate =.5;
-        double grabber_open = .3;
-        double grabber_close = .8;
+        double grabber_up = .45;
+        double grabber_down = .65;
+        double grabber_open = .4;
+        double grabber_close = .7;
         int maxSlideExtend = 2370;
 
 
-        slideRotate.setTargetPosition(startpos);
+        slideRotate.setTargetPosition((int)grabber_up);
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
@@ -133,17 +134,24 @@ public class Teleop extends LinearOpMode {
                 grabber.setPosition(grabber_close);
             }
             if (gamepad1.left_bumper) {
-                clawRotate.setPosition(grabber_rotate);
+                clawRotate.setPosition(grabber_up);
             }
             if (gamepad1.right_bumper) {
-                clawRotate.setPosition(startpos);
+                clawRotate.setPosition(grabber_down);
             }
 
+            if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
+                frontLeftMotor.setPower(frontLeftPower/2);
+                backLeftMotor.setPower(backLeftPower/2);
+                frontRightMotor.setPower(frontRightPower/2);
+                backRightMotor.setPower(backRightPower/2);
+            } else {
+                frontLeftMotor.setPower(frontLeftPower);
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
+            }
 
-            frontLeftMotor.setPower(frontLeftPower);
-            backLeftMotor.setPower(backLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            backRightMotor.setPower(backRightPower);
             //telemetry.addData("Slide Extend Power", slideExtendPower);
             //telemetry.update();
             //telemetry.addData("Right Stick Y (Gamepad 2)", gamepad2.right_stick_y);
@@ -180,8 +188,7 @@ public class Teleop extends LinearOpMode {
                 slideRotate.setPower(0);  // Stop when target is reached
             }
 
-            double clawPower = .5;
-            double GrabberPower = .5;
+
 
 
         }
