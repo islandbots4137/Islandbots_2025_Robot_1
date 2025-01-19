@@ -40,10 +40,10 @@ public class Teleop extends LinearOpMode {
         int startpos = 0;
         int mediumpos = -1100;
         int maxpos = -5000;
-        double grabber_up = .45;
-        double grabber_down = .65;
-        double grabber_open = .4;
-        double grabber_close = .7;
+        double grabber_open = .65;
+        double grabber_close = .2;
+        double grabber_up = .4;
+        double grabber_down = .6;
         int maxSlideExtend = 2370;
 
 
@@ -118,15 +118,15 @@ public class Teleop extends LinearOpMode {
                     frontRightPower = (y - x - rx) / denominator;
                     backRightPower = (y + x - rx) / denominator;
                     if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                        frontLeftMotor.setPower(frontLeftPower);
-                        backLeftMotor.setPower(backLeftPower);
-                        frontRightMotor.setPower(frontRightPower);
-                        backRightMotor.setPower(backRightPower);
-                    } else {
                         frontLeftMotor.setPower(frontLeftPower/2);
                         backLeftMotor.setPower(backLeftPower/2);
                         frontRightMotor.setPower(frontRightPower/2);
                         backRightMotor.setPower(backRightPower/2);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower);
+                        backLeftMotor.setPower(backLeftPower);
+                        frontRightMotor.setPower(frontRightPower);
+                        backRightMotor.setPower(backRightPower);
                     }
                     if (gamepad2.right_bumper) {
                         grabber.setPosition(grabber_open);
@@ -140,9 +140,9 @@ public class Teleop extends LinearOpMode {
                     if (gamepad1.right_bumper) {
                         clawRotate.setPosition(grabber_down);
                     }
-                    }
-                slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
+                slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
 
 
 
@@ -160,15 +160,15 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                frontLeftMotor.setPower(frontLeftPower);
-                backLeftMotor.setPower(backLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                backRightMotor.setPower(backRightPower);
-            } else {
                 frontLeftMotor.setPower(frontLeftPower/2);
                 backLeftMotor.setPower(backLeftPower/2);
                 frontRightMotor.setPower(frontRightPower/2);
                 backRightMotor.setPower(backRightPower/2);
+            } else {
+                frontLeftMotor.setPower(frontLeftPower);
+                backLeftMotor.setPower(backLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                backRightMotor.setPower(backRightPower);
             }
 
             //telemetry.addData("Slide Extend Power", slideExtendPower);
