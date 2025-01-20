@@ -86,11 +86,11 @@ public class AutoTest extends LinearOpMode {
                 //.strafeTo(new Vector2d(20, 20));
         TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
                 .waitSeconds(1)
-                .splineTo(new Vector2d(-60, -43), 0)
-                .waitSeconds(0)
-                .splineTo(new Vector2d(0, -45), Math.toRadians(-90))
+                .splineTo(new Vector2d(-60, 0), 0)
+                //.waitSeconds(0)
+                //.splineTo(new Vector2d(0, -45), Math.toRadians(-90))
                 .waitSeconds(.2)
-                .splineTo(new Vector2d(-70, -40), Math.toRadians(-90))
+                .splineTo(new Vector2d(-60, -40), 0)
                 .waitSeconds(.2);
                 //.splineTo(new Vector2d(-50, -40), Math.toRadians(-90));
         TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)

@@ -44,7 +44,7 @@ public class Teleop extends LinearOpMode {
         double grabber_close = .2;
         double grabber_up = .4;
         double grabber_down = .6;
-        int maxSlideExtend = 2370;
+        int maxSlideExtend = 1900;
 
 
         slideRotate.setTargetPosition(startpos);
@@ -88,10 +88,10 @@ public class Teleop extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
             double slideExtendPower = (a);
             //double slideRotatePower = (b);
-            if (gamepad2.cross) {
+            //if (gamepad2.cross) {
                 //setToPosition
-                slideRotate.setTargetPosition(startpos);
-            }
+            //    slideRotate.setTargetPosition(startpos);
+            //}
             if (gamepad2.triangle) {
                 //setToPosition
                 slideRotate.setTargetPosition(maxpos);
@@ -118,10 +118,10 @@ public class Teleop extends LinearOpMode {
                     frontRightPower = (y - x - rx) / denominator;
                     backRightPower = (y + x - rx) / denominator;
                     if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                        frontLeftMotor.setPower(frontLeftPower/2);
-                        backLeftMotor.setPower(backLeftPower/2);
-                        frontRightMotor.setPower(frontRightPower/2);
-                        backRightMotor.setPower(backRightPower/2);
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
                     } else {
                         frontLeftMotor.setPower(frontLeftPower);
                         backLeftMotor.setPower(backLeftPower);
@@ -178,6 +178,24 @@ public class Teleop extends LinearOpMode {
 
 //            slideExtend.setPower(slideExtendPower);
             double position_x = slideExtend.getCurrentPosition();
+            double position_y = slideRotate.getCurrentPosition();
+
+            if (position_y < -1200) {
+                maxSlideExtend = 2370;
+            }
+            else {
+                maxSlideExtend = 1900;
+            }
+            //if (position_y > -1200) {
+            //    while (position_x > 1930){
+            //        slideExtend.setPower(-1);
+            //        if (position_x < 1930) {
+            //            break;
+            //        }
+
+
+            //    }
+                slideExtend.setPower(0);
 
 
             if (position_x < maxSlideExtend && position_x > 20) {
