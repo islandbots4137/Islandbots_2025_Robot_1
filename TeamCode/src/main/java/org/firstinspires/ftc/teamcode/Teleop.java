@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.concurrent.TimeUnit;
+
 @TeleOp
 public class Teleop extends LinearOpMode {
     @Override
@@ -40,6 +42,9 @@ public class Teleop extends LinearOpMode {
         int startpos = 0;
         int mediumpos = -1100;
         int maxpos = -5000;
+        int elementRotateStart = -4900;
+        int elementExtendStart = 2000;
+        int elementRotateEnd = -2500;
         double grabber_open = .65;
         double grabber_close = .2;
         double grabber_up = .4;
@@ -88,17 +93,36 @@ public class Teleop extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
             double slideExtendPower = (a);
             //double slideRotatePower = (b);
-            //if (gamepad2.cross) {
+
+
+
+
+            if (gamepad2.cross) {
                 //setToPosition
-            //    slideRotate.setTargetPosition(startpos);
-            //}
+                slideRotate.setTargetPosition(mediumpos);
+                slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slideExtend.setPower(1);
+                slideExtend.setTargetPosition(1000);
+                clawRotate.setPosition(grabber_up);
+                grabber.setPosition(grabber_open);
+            }
+            if (slideExtend.isBusy() == false || slideRotate.isBusy() == false){
+                slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //make sure it works later
+            }
             if (gamepad2.triangle) {
                 //setToPosition
                 slideRotate.setTargetPosition(maxpos);
             }
             if (gamepad2.square) {
                 //setToPosition
-                slideRotate.setTargetPosition(mediumpos);
+                clawRotate.setPosition(grabber_up);
+                slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slideRotate.setTargetPosition(elementRotateStart);
+                slideExtend.setTargetPosition(elementExtendStart);
+                TimeUnit.MILLISECONDS.sleep(1500);
+                slideRotate.setTargetPosition(elementRotateEnd);
+                clawRotate.setPosition(grabber_down);
+
             }
             if (gamepad2.circle) {
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
