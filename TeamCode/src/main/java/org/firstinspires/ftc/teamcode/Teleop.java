@@ -40,11 +40,14 @@ public class Teleop extends LinearOpMode {
         slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
 
         int startpos = 0;
-        int mediumpos = -1100;
+        int mediumpos = -1300;
         int maxpos = -5000;
-        int elementRotateStart = -4900;
-        int elementExtendStart = 2000;
+        int wall_pickup_extend = 300;
+        int elementRotateStart = -5000;
+
         int elementRotateEnd = -2500;
+        int elementExtendStart = 600;
+        int elementExtendEnd = 0;
         double grabber_open = .65;
         double grabber_close = .2;
         double grabber_up = .4;
@@ -101,10 +104,45 @@ public class Teleop extends LinearOpMode {
                 //setToPosition
                 slideRotate.setTargetPosition(mediumpos);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideExtend.setPower(1);
-                slideExtend.setTargetPosition(1000);
+                slideExtend.setTargetPosition(wall_pickup_extend);
+                slideExtend.setPower(1.0);  // Move towards target
+                slideRotate.setPower(1.0);
                 clawRotate.setPosition(grabber_up);
                 grabber.setPosition(grabber_open);
+                while (slideExtend.isBusy() || slideRotate.isBusy()) {
+                    telemetry.addData("Slide Extend is Busy", slideExtend.isBusy());
+
+                    y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+                    x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+                    rx = gamepad1.right_stick_x;
+                    frontLeftPower = (y + x + rx) / denominator;
+                    backLeftPower = (y - x + rx) / denominator;
+                    frontRightPower = (y - x - rx) / denominator;
+                    backRightPower = (y + x - rx) / denominator;
+                    if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower);
+                        backLeftMotor.setPower(backLeftPower);
+                        frontRightMotor.setPower(frontRightPower);
+                        backRightMotor.setPower(backRightPower);
+                    }
+                    if (gamepad2.right_bumper) {
+                        grabber.setPosition(grabber_open);
+                    }
+                    if (gamepad2.left_bumper) {
+                        grabber.setPosition(grabber_close);
+                    }
+                    if (gamepad1.left_bumper) {
+                        clawRotate.setPosition(grabber_up);
+                    }
+                    if (gamepad1.right_bumper) {
+                        clawRotate.setPosition(grabber_down);
+                    }
+                }
             }
             if (slideExtend.isBusy() == false || slideRotate.isBusy() == false){
                 slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //make sure it works later
@@ -119,10 +157,77 @@ public class Teleop extends LinearOpMode {
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 slideRotate.setTargetPosition(elementRotateStart);
                 slideExtend.setTargetPosition(elementExtendStart);
-                TimeUnit.MILLISECONDS.sleep(1500);
+                slideExtend.setPower(1.0);  // Move towards target
+                slideRotate.setPower(1.0);
+                while (slideExtend.isBusy() || slideRotate.isBusy()) {
+                    telemetry.addData("Slide Extend is Busy", slideExtend.isBusy());
+                    y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+                    x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+                    rx = gamepad1.right_stick_x;
+                    frontLeftPower = (y + x + rx) / denominator;
+                    backLeftPower = (y - x + rx) / denominator;
+                    frontRightPower = (y - x - rx) / denominator;
+                    backRightPower = (y + x - rx) / denominator;
+                    if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower);
+                        backLeftMotor.setPower(backLeftPower);
+                        frontRightMotor.setPower(frontRightPower);
+                        backRightMotor.setPower(backRightPower);
+                    }
+                    if (gamepad2.right_bumper) {
+                        grabber.setPosition(grabber_open);
+                    }
+                    if (gamepad2.left_bumper) {
+                        grabber.setPosition(grabber_close);
+                    }
+                    if (gamepad1.left_bumper) {
+                        clawRotate.setPosition(grabber_up);
+                    }
+                    if (gamepad1.right_bumper) {
+                        clawRotate.setPosition(grabber_down);
+                    }
+                }
                 slideRotate.setTargetPosition(elementRotateEnd);
                 clawRotate.setPosition(grabber_down);
-
+                slideExtend.setTargetPosition(elementExtendEnd);
+                while (slideExtend.isBusy() || slideRotate.isBusy()) {
+                    telemetry.addData("Slide Extend is Busy", slideExtend.isBusy());
+                    y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+                    x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+                    rx = gamepad1.right_stick_x;
+                    frontLeftPower = (y + x + rx) / denominator;
+                    backLeftPower = (y - x + rx) / denominator;
+                    frontRightPower = (y - x - rx) / denominator;
+                    backRightPower = (y + x - rx) / denominator;
+                    if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower);
+                        backLeftMotor.setPower(backLeftPower);
+                        frontRightMotor.setPower(frontRightPower);
+                        backRightMotor.setPower(backRightPower);
+                    }
+                    if (gamepad2.right_bumper) {
+                        grabber.setPosition(grabber_open);
+                    }
+                    if (gamepad2.left_bumper) {
+                        grabber.setPosition(grabber_close);
+                    }
+                    if (gamepad1.left_bumper) {
+                        clawRotate.setPosition(grabber_up);
+                    }
+                    if (gamepad1.right_bumper) {
+                        clawRotate.setPosition(grabber_down);
+                    }
+                }
             }
             if (gamepad2.circle) {
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);

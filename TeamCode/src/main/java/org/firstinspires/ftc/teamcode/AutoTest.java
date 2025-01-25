@@ -50,11 +50,13 @@ public class AutoTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         int startpos = 0;
-        int mediumpos = -1100;
+        int mediumpos = -1300;
         int maxpos = -5000;
         double grabber_open = .65;
         double grabber_close = .2;
         double grabber_up = .5;
+        int elementExtendStart = 600;
+        int elementExtendEnd = 0;
         double grabber_down = .6;
         int maxSlideExtend = 2370;
 
@@ -82,19 +84,23 @@ public class AutoTest extends LinearOpMode {
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .waitSeconds(1)
-                .splineTo(new Vector2d(-43, 0), 0);
+                .splineTo(new Vector2d(-38, 0), 0);
                 //.strafeTo(new Vector2d(20, 20));
         TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
                 .waitSeconds(1)
-                .splineTo(new Vector2d(-60, 0), 0)
+                .splineTo(new Vector2d(-72, 0), 0);
                 //.waitSeconds(0)
                 //.splineTo(new Vector2d(0, -45), Math.toRadians(-90))
-                .waitSeconds(.2)
-                .splineTo(new Vector2d(-60, -40), 0)
+
+        TrajectoryActionBuilder tab2a = drive.actionBuilder(initialPose)
+                .waitSeconds(1)
+                .splineTo(new Vector2d(-71, -63), Math.toDegrees(90))
                 .waitSeconds(.2);
                 //.splineTo(new Vector2d(-50, -40), Math.toRadians(-90));
         TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
                 .waitSeconds(1);
+        TrajectoryActionBuilder tab4 = drive.actionBuilder(initialPose)
+                .waitSeconds(5);
 
 
         Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
@@ -102,6 +108,7 @@ public class AutoTest extends LinearOpMode {
                 .build();
         clawRotate.setPosition(grabber_up);
         grabber.setPosition(grabber_close);
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -110,15 +117,13 @@ public class AutoTest extends LinearOpMode {
         slideRotate.setPower(1);
         slideExtend.setPower(1);
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideRotate.setTargetPosition(-3000);
+        slideRotate.setTargetPosition(-3100);
         slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideExtend.setTargetPosition(1200);
+        slideExtend.setTargetPosition(1300);
 
 
         Action trajectoryActionChosen;
         trajectoryActionChosen = tab1.build();
-
-
         Actions.runBlocking(
                 new SequentialAction(
                         trajectoryActionChosen,
@@ -141,10 +146,16 @@ public class AutoTest extends LinearOpMode {
                         trajectoryActionChosen,
                         trajectoryActionCloseOut
                 ));
-        slideRotate.setTargetPosition(startpos);
-        slideExtend.setTargetPosition(0);
-        clawRotate.setPosition(.5);
-        //slideRotate.setTargetPosition(mediumpos);
+        //slideRotate.setTargetPosition(startpos);
+        slideExtend.setTargetPosition(elementExtendStart);
+        clawRotate.setPosition(.4);
+        slideRotate.setTargetPosition(mediumpos);
+        trajectoryActionChosen = tab2a.build();
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajectoryActionChosen,
+                        trajectoryActionCloseOut
+                ));
         //clawRotate.setPosition(.4);
         trajectoryActionChosen = tab3.build();
         Actions.runBlocking(
@@ -152,6 +163,15 @@ public class AutoTest extends LinearOpMode {
                         trajectoryActionChosen,
                         trajectoryActionCloseOut
                 ));
+        grabber.setPosition(grabber_close);
+        slideRotate.setTargetPosition(maxpos);
+        trajectoryActionChosen = tab4.build();
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajectoryActionChosen,
+                        trajectoryActionCloseOut
+                ));
+
 
 
     }}
