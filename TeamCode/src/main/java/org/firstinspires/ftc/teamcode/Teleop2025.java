@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp
-public class Teleop extends LinearOpMode {
+public class Teleop2025 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -54,7 +54,7 @@ public class Teleop extends LinearOpMode {
         int maxSlideExtend = 1900;
 
 
-        slideRotate.setTargetPosition(startpos);
+        slideRotate.setTargetPosition(RotateStartPos);
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
@@ -178,9 +178,9 @@ public class Teleop extends LinearOpMode {
             }
             if (slideExtend.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 //manual control
-                if (slideExtendPower > 0 && position_x < maxSlideExtend) {
+                if (slideExtendPower > 0 && extpos < maxSlideExtend) {
                     slideExtend.setPower(slideExtendPower);
-                } else if (slideExtendPower < 0 && position_x > 20){
+                } else if (slideExtendPower < 0 && extpos > 20){
                     slideExtend.setPower(slideExtendPower);
                 }  else {
                     slideExtend.setPower(0);

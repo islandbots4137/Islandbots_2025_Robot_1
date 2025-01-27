@@ -46,11 +46,11 @@ import java.util.ArrayList;
 @Config
 @Autonomous(name = "RightAuto", group = "Autonomous")
 
-public class AutoTest extends LinearOpMode {
+public class Auto2025 extends LinearOpMode {
     
     public class LinearSlide {
-        private DcMotorEx slideExtend;
-        private DcMotorEx slideRotate;
+        private DcMotor slideExtend;
+        private DcMotor slideRotate;
         private  Servo clawRotate;
         private  Servo grabber;
 
@@ -95,8 +95,8 @@ public class AutoTest extends LinearOpMode {
             return new Action() {
                 @Override
                 public boolean run(@NonNull TelemetryPacket packet) {
-                    slideExtend.setTargetPosition(extendVal);
-                    slideRotate.setTargetPosition(rotateVal);
+                    clawRotate.setPosition(clawRotateVal);
+                    grabber.setPosition(grabberVal);
                     //return false (action done) right away
                     return false;
                 }
@@ -166,7 +166,7 @@ public class AutoTest extends LinearOpMode {
                         slide.setSlide(1300, -3100),
                         move1, //go to the submersible, 
                         slide.setSlide(500, -3100), //retract the slide, hanging the specimen
-                        slide.setslide(), //put slide in position to pick up second 
+                        slide.setSlide(500, -3100), //put slide in position to pick up second
                         move2 //move to pick up the second specimen 
                         //move3 //go to pick up the second specimen 
                 )
