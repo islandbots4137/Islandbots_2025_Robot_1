@@ -67,8 +67,8 @@ public class Auto2025 extends LinearOpMode {
             slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideExtend.setPower(1.0);
             //now, the servos 
-            Servo clawRotate = hardwareMap.servo.get("clawRotate");
-            Servo grabber = hardwareMap.servo.get("grabber");
+            clawRotate = hardwareMap.servo.get("clawRotate");
+            grabber = hardwareMap.servo.get("grabber");
             clawRotate.setDirection(Servo.Direction.FORWARD);
             grabber.setDirection(Servo.Direction.FORWARD);
         }
