@@ -152,10 +152,10 @@ public class AutoTest extends LinearOpMode {
 
 
         Action segment2 = tab1.endTrajectory().fresh()
-                .waitSeconds(0)
+                .waitSeconds(0.1)
+                .setTangent(-Math.PI /2 ) //start in the negative direction of y axis 
+                .splineTo(new Vector2d(-71, -63), 0);
                 .build();
-        clawRotate.setPosition(grabber_up);
-        grabber.setPosition(grabber_close);
 
         waitForStart();
         if (isStopRequested()) return;
