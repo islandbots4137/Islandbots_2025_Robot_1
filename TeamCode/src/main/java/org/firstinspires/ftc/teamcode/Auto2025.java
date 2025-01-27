@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
-import org.openftc.apriltag.AprilTagDetection;
+//import org.openftc.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
 @Config
@@ -76,10 +76,16 @@ public class AutoTest extends LinearOpMode {
 
         public Action setSlide(int extendVal, int rotateVal) {
             return new Action() {
+                private boolean initialized = false;
                 @Override
                 public boolean run(@NonNull TelemetryPacket packet) {
-                    slideExtend.setTargetPosition(extendVal);
-                    slideRotate.setTargetPosition(rotateVal);
+                    if (!initialized) {
+                        slideExtend.setTargetPosition(extendVal);
+                        slideRotate.setTargetPosition(rotateVal);
+                        slideExtend.setPower(1.0);
+                        slideRotate.setPower(1.0);
+                        initialized = true;
+                    }
                     //return true while motors are in action 
                     return(slideExtend.isBusy() || slideRotate.isBusy() );
                 }
@@ -111,7 +117,6 @@ public class AutoTest extends LinearOpMode {
         double grabber_down = .6;
         int maxSlideExtend = 2370;
 
-        AutoTest startingPosition;
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
@@ -129,50 +134,43 @@ public class AutoTest extends LinearOpMode {
 
 
 
-
+        //moving in position to hang specimen
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .waitSeconds(1)
                 .splineTo(new Vector2d(-38, 0), 0);
                 //.strafeTo(new Vector2d(20, 20));
-        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
-                .waitSeconds(1)
-                .splineTo(new Vector2d(-72, 0), 0);
-                //.waitSeconds(0)
-                //.splineTo(new Vector2d(0, -45), Math.toRadians(-90))
 
-        TrajectoryActionBuilder tab2a = drive.actionBuilder(initialPose)
-                .waitSeconds(1)
-                .splineTo(new Vector2d(-71, -63), Math.toDegrees(90))
-                .waitSeconds(.2);
-                //.splineTo(new Vector2d(-50, -40), Math.toRadians(-90));
-        TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
-                .waitSeconds(1);
-        TrajectoryActionBuilder tab4 = drive.actionBuilder(initialPose)
-                .waitSeconds(5);
-
-
-        Action segment2 = tab1.endTrajectory().fresh()
+        //moving to pick up next specimen from the wall 
+        TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
                 .waitSeconds(0.1)
                 .setTangent(-Math.PI /2 ) //start in the negative direction of y axis 
                 .splineTo(new Vector2d(-71, -63), 0);
-                .build();
+        
+        /*TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
+                .waitSeconds(0.1)
+                .setTangent(-Math.PI /2 ) //start in the negative direction of y axis 
+                .splineTo(new Vector2d(-71, -63), 0);
+        */
+
+        // now, build trajectories, turning TrajectoryActionBuilder to Action:
+        Action move1 = tab1.build();
+        Action move2 = tab2.build();
+        //Action move3 = tab3.build();
 
         waitForStart();
         if (isStopRequested()) return;
-
-        Action segment1 = tab1.build(); //going forward to the beam
 
         Actions.runBlocking(
                 new SequentialAction(
                         slide.setClaw(grabber_close, grabber_up),
                         slide.setSlide(1300, -3100),
-                        segment1, //go to the submersible, 
+                        move1, //go to the submersible, 
                         slide.setSlide(500, -3100), //retract the slide, hanging the specimen
-                        segment2, //back away from the submersible, 
-                        segment3, //go to pick up the second specimen 
-
+                        slide.setslide(), //put slide in position to pick up second 
+                        move2 //move to pick up the second specimen 
+                        //move3 //go to pick up the second specimen 
                 )
         );
 
     }
-    }
+}
