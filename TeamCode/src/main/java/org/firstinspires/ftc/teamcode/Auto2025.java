@@ -149,7 +149,7 @@ public class Auto2025 extends LinearOpMode {
         TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
                 .waitSeconds(0.1)
                 .setTangent(-Math.PI /2 )
-                .splineToLinearHeading(new Pose2d(-65, -63, Math.PI/2), Math.PI/2);
+                .splineToLinearHeading(new Pose2d(-65, -63, -Math.PI/2), -Math.PI/2);
 
         /*TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
                 .waitSeconds(0.1)
