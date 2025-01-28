@@ -42,14 +42,15 @@ public class Teleop extends LinearOpMode {
         int startpos = 0;
         int mediumpos = -1300;
         int maxpos = -5000;
+        int hangpos = -4700;
         int wall_pickup_extend = 300;
-        int elementRotateStart = -5000;
+        int elementRotateStart = -4700;
 
         int elementRotateEnd = -2500;
-        int elementExtendStart = 600;
+        int elementExtendStart = 650;
         int elementExtendEnd = 0;
         double grabber_open = .65;
-        double grabber_close = .2;
+        double grabber_close = .1;
         double grabber_up = .4;
         double grabber_down = .6;
         int maxSlideExtend = 1900;
@@ -120,15 +121,15 @@ public class Teleop extends LinearOpMode {
                     frontRightPower = (y - x - rx) / denominator;
                     backRightPower = (y + x - rx) / denominator;
                     if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                        frontLeftMotor.setPower(frontLeftPower/3);
-                        backLeftMotor.setPower(backLeftPower/3);
-                        frontRightMotor.setPower(frontRightPower/3);
-                        backRightMotor.setPower(backRightPower/3);
-                    } else {
                         frontLeftMotor.setPower(frontLeftPower);
                         backLeftMotor.setPower(backLeftPower);
                         frontRightMotor.setPower(frontRightPower);
                         backRightMotor.setPower(backRightPower);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
                     }
                     if (gamepad2.right_bumper) {
                         grabber.setPosition(grabber_open);
@@ -169,15 +170,15 @@ public class Teleop extends LinearOpMode {
                     frontRightPower = (y - x - rx) / denominator;
                     backRightPower = (y + x - rx) / denominator;
                     if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                        frontLeftMotor.setPower(frontLeftPower/3);
-                        backLeftMotor.setPower(backLeftPower/3);
-                        frontRightMotor.setPower(frontRightPower/3);
-                        backRightMotor.setPower(backRightPower/3);
-                    } else {
                         frontLeftMotor.setPower(frontLeftPower);
                         backLeftMotor.setPower(backLeftPower);
                         frontRightMotor.setPower(frontRightPower);
                         backRightMotor.setPower(backRightPower);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
                     }
                     if (gamepad2.right_bumper) {
                         grabber.setPosition(grabber_open);
@@ -205,15 +206,15 @@ public class Teleop extends LinearOpMode {
                     frontRightPower = (y - x - rx) / denominator;
                     backRightPower = (y + x - rx) / denominator;
                     if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                        frontLeftMotor.setPower(frontLeftPower/3);
-                        backLeftMotor.setPower(backLeftPower/3);
-                        frontRightMotor.setPower(frontRightPower/3);
-                        backRightMotor.setPower(backRightPower/3);
-                    } else {
                         frontLeftMotor.setPower(frontLeftPower);
                         backLeftMotor.setPower(backLeftPower);
                         frontRightMotor.setPower(frontRightPower);
                         backRightMotor.setPower(backRightPower);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
                     }
                     if (gamepad2.right_bumper) {
                         grabber.setPosition(grabber_open);
@@ -247,15 +248,15 @@ public class Teleop extends LinearOpMode {
                     frontRightPower = (y - x - rx) / denominator;
                     backRightPower = (y + x - rx) / denominator;
                     if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                        frontLeftMotor.setPower(frontLeftPower/3);
-                        backLeftMotor.setPower(backLeftPower/3);
-                        frontRightMotor.setPower(frontRightPower/3);
-                        backRightMotor.setPower(backRightPower/3);
-                    } else {
                         frontLeftMotor.setPower(frontLeftPower);
                         backLeftMotor.setPower(backLeftPower);
                         frontRightMotor.setPower(frontRightPower);
                         backRightMotor.setPower(backRightPower);
+                    } else {
+                        frontLeftMotor.setPower(frontLeftPower/3);
+                        backLeftMotor.setPower(backLeftPower/3);
+                        frontRightMotor.setPower(frontRightPower/3);
+                        backRightMotor.setPower(backRightPower/3);
                     }
                     if (gamepad2.right_bumper) {
                         grabber.setPosition(grabber_open);
@@ -272,7 +273,9 @@ public class Teleop extends LinearOpMode {
                 }
                 slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-
+            if (gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_right) {
+                slideRotate.setTargetPosition(hangpos);
+            }
 
 
             if (gamepad2.right_bumper) {
@@ -289,15 +292,15 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                frontLeftMotor.setPower(frontLeftPower/2);
-                backLeftMotor.setPower(backLeftPower/2);
-                frontRightMotor.setPower(frontRightPower/2);
-                backRightMotor.setPower(backRightPower/2);
-            } else {
                 frontLeftMotor.setPower(frontLeftPower);
                 backLeftMotor.setPower(backLeftPower);
                 frontRightMotor.setPower(frontRightPower);
                 backRightMotor.setPower(backRightPower);
+            } else {
+                frontLeftMotor.setPower(frontLeftPower/2);
+                backLeftMotor.setPower(backLeftPower/2);
+                frontRightMotor.setPower(frontRightPower/2);
+                backRightMotor.setPower(backRightPower/2);
             }
 
             //telemetry.addData("Slide Extend Power", slideExtendPower);

@@ -55,7 +55,7 @@ public class AutoTest extends LinearOpMode {
         int mediumpos = -1300;
         int maxpos = -5000;
         double grabber_open = .65;
-        double grabber_close = .2;
+        double grabber_close = .1;
         double grabber_up = .5;
         int elementExtendStart = 600;
         int elementExtendEnd = 0;
@@ -82,30 +82,28 @@ public class AutoTest extends LinearOpMode {
 
 
         Pose2d initialPose = new Pose2d(-70, 0, Math.toRadians(0));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Pose2d Pose_2 = new Pose2d(-38, 0, Math.toRadians(0));
         Pose2d Pose_3 = new Pose2d(-72, 0, Math.toRadians(0));
         Pose2d Pose_4 = new Pose2d(-71, -63, Math.toDegrees(90));
-
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .waitSeconds(1)
                 .splineTo(new Vector2d(-38, 0), 0);
-                //.strafeTo(new Vector2d(20, 20));
+        //.strafeTo(new Vector2d(20, 20));
         TrajectoryActionBuilder tab2 = drive.actionBuilder(drive.pose)
                 .waitSeconds(1)
-                .splineTo(new Vector2d(-72, 0), Math.toRadians(0))
-                .setTangent(Math.toRadians(0));
-                // .turn(Math.toRadians(180))
-                //.waitSeconds(0)
-                //.splineTo(new Vector2d(0, -45), Math.toRadians(-90))
+                .splineToConstantHeading(new Vector2d(-72, 0), 0);
+
+        //.waitSeconds(0)
+        //.splineTo(new Vector2d(0, -45), Math.toRadians(-90))
 
         TrajectoryActionBuilder tab2a = drive.actionBuilder(drive.pose)
                 .waitSeconds(1)
                 .splineTo(new Vector2d(-71, -63), Math.toDegrees(90))
                 .waitSeconds(.2);
-                //.splineTo(new Vector2d(-50, -40), Math.toRadians(-90));
+        //.splineTo(new Vector2d(-50, -40), Math.toRadians(-90));
         TrajectoryActionBuilder tab3 = drive.actionBuilder(drive.pose)
                 .waitSeconds(1);
         TrajectoryActionBuilder tab4 = drive.actionBuilder(drive.pose)
