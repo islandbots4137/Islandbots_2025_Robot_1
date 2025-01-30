@@ -136,7 +136,7 @@ public class Auto2025 extends LinearOpMode {
 
         //moving in position to hang specimen
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .waitSeconds(1)
+                .waitSeconds(.3)
                 .splineTo(new Vector2d(-38, 0), 0);
         //.strafeTo(new Vector2d(20, 20));
 
@@ -148,8 +148,27 @@ public class Auto2025 extends LinearOpMode {
 
         TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
                 .waitSeconds(0.1)
-                .setTangent(-Math.PI /2 )
-                .splineToLinearHeading(new Pose2d(-65, -63, -Math.PI/2), -Math.PI/2);
+                .setTangent(-Math.PI/2 )
+                .splineToLinearHeading(new Pose2d(-65, -65, -Math.PI/2), -Math.PI/2)
+                .waitSeconds(1);
+        TrajectoryActionBuilder  tab4 = tab2.endTrajectory().fresh()
+                .waitSeconds(0.1)
+                .setTangent(-Math.PI/2)
+                .splineToLinearHeading(new Pose2d(-65, -40, -Math.PI/2), -Math.PI/2)
+                .waitSeconds(.1)
+                .splineToLinearHeading(new Pose2d(-55, -65, -Math.PI/2), -Math.PI/2)
+                .waitSeconds(.5);
+
+        TrajectoryActionBuilder  tab5 = tab2.endTrajectory().fresh()
+                .waitSeconds(0.1)
+                .splineTo(new Vector2d(-55, 0), 0)
+                .waitSeconds(2)
+                .splineTo(new Vector2d(-54, 0), 0)
+                .waitSeconds(1)
+                .splineTo(new Vector2d(-38, 20), 0)
+                .setTangent(0);
+
+
 
         /*TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
                 .waitSeconds(0.1)
@@ -161,6 +180,8 @@ public class Auto2025 extends LinearOpMode {
         Action move1 = tab1.build();
         Action move2 = tab2.build();
         Action move3 = tab3.build();
+        Action move4 = tab4.build();
+        Action move5 = tab5.build();
         //Action move3 = tab3.build();
 
         waitForStart();
@@ -173,10 +194,18 @@ public class Auto2025 extends LinearOpMode {
                         move1, //go to the submersible,
                         slide.setClaw(grabber_close, grabber_down),
                         slide.setSlide(200, -3100), //retract the slide, hanging the specimen
+                        slide.setClaw(grabber_open, grabber_down),
                         move2, //move back to avoid collisions
                         slide.setSlide(500, -1300), //put slide in position to pick up second
                         move3, //move to pick up the second specimen
-                        slide.setSlide(500, -3100)
+                        slide.setClaw(grabber_open, grabber_up),
+                        move4,
+                        slide.setClaw(grabber_close, grabber_up),
+                        slide.setSlide(500, -3100),
+                        slide.setSlide(1300, -3100),
+                        move5, //moves to submersible again
+                        slide.setClaw(grabber_close, grabber_down),
+                        slide.setSlide(200, -3100) //retract the slide, hanging the specimen
                         //move3 //go to pick up the second specimen
                 )
         );
