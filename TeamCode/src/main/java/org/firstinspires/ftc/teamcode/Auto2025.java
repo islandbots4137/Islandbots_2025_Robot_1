@@ -97,6 +97,11 @@ public class Auto2025 extends LinearOpMode {
                 public boolean run(@NonNull TelemetryPacket packet) {
                     clawRotate.setPosition(clawRotateVal);
                     grabber.setPosition(grabberVal);
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     //return false (action done) right away
                     return false;
                 }
@@ -111,7 +116,7 @@ public class Auto2025 extends LinearOpMode {
         int maxpos = -5000;
         double grabber_open = .65;
         double grabber_close = .1;
-        double grabber_up = .5;
+        double grabber_up = .4;
         int elementExtendStart = 600;
         int elementExtendEnd = 0;
         double grabber_down = .6;
@@ -136,45 +141,52 @@ public class Auto2025 extends LinearOpMode {
 
         //moving in position to hang specimen
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .waitSeconds(.3)
                 .splineTo(new Vector2d(-38, 0), 0);
         //.strafeTo(new Vector2d(20, 20));
 
         //moving to pick up next specimen from the wall
         TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
-                .waitSeconds(0.1)
+                .waitSeconds(0.4)
                 .setTangent(-Math.PI ) //start in the negative direction of y axis
                 .splineToConstantHeading(new Vector2d(-65, 0), 0);
 
         TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
-                .waitSeconds(0.1)
+                .waitSeconds(0.4)
                 .setTangent(-Math.PI/2 )
                 .splineToLinearHeading(new Pose2d(-65, -65, -Math.PI/2), -Math.PI/2)
-                .waitSeconds(1);
-        TrajectoryActionBuilder  tab4 = tab3.endTrajectory().fresh()
-                .waitSeconds(0.1)
+                .waitSeconds(.2);
+        TrajectoryActionBuilder  tab4 = tab2.endTrajectory().fresh()
+                .waitSeconds(1)
                 .setTangent(-Math.PI/2)
                 .splineToLinearHeading(new Pose2d(-65, -40, -Math.PI/2), -Math.PI/2)
-                .waitSeconds(.1)
-                .splineToLinearHeading(new Pose2d(-55, -65, -Math.PI/2), -Math.PI/2)
-                .waitSeconds(.5);
+                .waitSeconds(.2)
+                .splineToLinearHeading(new Pose2d(-58, -63, -Math.PI/2), -Math.PI/2)
+                .waitSeconds(.2);
 
-        TrajectoryActionBuilder  tab5 = tab4.endTrajectory().fresh()
+        TrajectoryActionBuilder  tab5 = tab2.endTrajectory().fresh()
                 .waitSeconds(0.1)
-                .splineTo(new Vector2d(-55, 0), 0)
-                .waitSeconds(2)
-                .splineTo(new Vector2d(-54, 0), 0)
-                .waitSeconds(1)
-                .splineTo(new Vector2d(-38, 20), 0)
+                .splineTo(new Vector2d(-60, 0), 0)
+                .waitSeconds(.1);
+        TrajectoryActionBuilder tab7 = tab2.endTrajectory().fresh()
+                .splineTo(new Vector2d(-47, 0), 0)
+                .waitSeconds(.1)
+                .splineTo(new Vector2d(-38.5, 6), 0)
                 .setTangent(0);
 
 
+        //TrajectoryActionBuilder tab6 = tab2.endTrajectory().fresh()
+        //        .waitSeconds(.1)
+        //        .splineTo(new Vector2d(-70, 0), 0)
+        //        .waitSeconds(.1)
+        //        .splineTo(new Vector2d(-70, -75), 0);
 
-        /*TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
+
+
+        TrajectoryActionBuilder  tab6 = tab2.endTrajectory().fresh()
                 .waitSeconds(0.1)
                 .setTangent(-Math.PI /2 ) //start in the negative direction of y axis
-                .splineTo(new Vector2d(-71, -63), 0);
-        */
+                .splineTo(new Vector2d(-71, -71), 0);
+
 
         // now, build trajectories, turning TrajectoryActionBuilder to Action:
         Action move1 = tab1.build();
@@ -182,6 +194,8 @@ public class Auto2025 extends LinearOpMode {
         Action move3 = tab3.build();
         Action move4 = tab4.build();
         Action move5 = tab5.build();
+        Action move7 = tab7.build();
+        Action move6 = tab6.build();
         //Action move3 = tab3.build();
 
         waitForStart();
@@ -190,22 +204,28 @@ public class Auto2025 extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(1300, -3100),
+                        slide.setSlide(1200, -2820),
                         move1, //go to the submersible,
                         slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(200, -3100), //retract the slide, hanging the specimen
+                        slide.setSlide(200, -2820), //retract the slide, hanging the specimen
                         slide.setClaw(grabber_open, grabber_down),
                         move2, //move back to avoid collisions
-                        slide.setSlide(500, -1300), //put slide in position to pick up second
+                        slide.setClaw(grabber_open, grabber_up),
+                        slide.setSlide(200, -2820), //retract the slide, hanging the specimen
+                        slide.setClaw(grabber_open, grabber_down),
+                        slide.setSlide(150, -1250), //put slide in position to pick up second
                         move3, //move to pick up the second specimen
                         slide.setClaw(grabber_open, grabber_up),
                         move4,
                         slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(500, -3100),
-                        slide.setSlide(1300, -3100),
+                        slide.setSlide(150, -2800),
                         move5, //moves to submersible again
+                        slide.setSlide(1100, -2800),
+                        move7,
                         slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(200, -3100) //retract the slide, hanging the specimen
+                        slide.setSlide(50, -2800), //retract the slide, hanging the specimen
+                        slide.setClaw(grabber_open,grabber_down),
+                        move6
                         //move3 //go to pick up the second specimen
                 )
         );

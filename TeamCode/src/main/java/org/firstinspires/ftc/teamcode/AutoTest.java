@@ -46,7 +46,7 @@ import org.openftc.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
 @Config
-@Autonomous(name = "RightAuto", group = "Autonomous")
+//@Autonomous(name = "RightAuto", group = "Autonomous")
 public class AutoTest extends LinearOpMode {
 
     @Override

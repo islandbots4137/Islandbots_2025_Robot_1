@@ -105,7 +105,7 @@ public class Teleop extends LinearOpMode {
                 //setToPosition
                 slideRotate.setTargetPosition(mediumpos);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideExtend.setTargetPosition(wall_pickup_extend);
+                slideExtend.setTargetPosition(50);
                 slideExtend.setPower(1.0);  // Move towards target
                 slideRotate.setPower(1.0);
                 clawRotate.setPosition(grabber_up);
