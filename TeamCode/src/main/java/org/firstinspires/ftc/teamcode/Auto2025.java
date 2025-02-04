@@ -144,6 +144,9 @@ public class Auto2025 extends LinearOpMode {
         Pose2d initialPose = new Pose2d(-70, 0, NORTH);
         /* warning: this expects that motor names in hardware map are:
          * leftFront, leftBack, rightFront, rightBack
+         * and that the two odometry pods are plugged into these ports:
+         *  parallel: leftBack motor port 
+         *  perp = rightBack motor port 
          * Do not rename them!
          */
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
@@ -158,13 +161,13 @@ public class Auto2025 extends LinearOpMode {
 
         //moving back from submersible
         TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
-                .waitSeconds(0.4)
+                .waitSeconds(2)
                 .setTangent(SOUTH) //start in the negative direction of y axis
                 .splineToConstantHeading(new Vector2d(-65, 0), 0);
 
         //going to side wall for second speciment         
         TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
-                .waitSeconds(0.4)
+                .waitSeconds(2)
                 .setTangent(EAST)
                 .splineToSplineHeading(new Pose2d(-58, -40, EAST), EAST)
                 .waitSeconds(.2)
@@ -172,16 +175,17 @@ public class Auto2025 extends LinearOpMode {
 
         //going back to submersible 
         TrajectoryActionBuilder  tab4 = tab3.endTrajectory().fresh()
-                .waitSeconds(0.1)
+                .waitSeconds(2)
                 .setTangent(WEST)
                 .splineToSplineHeading(new Pose2d(-60, 0, NORTH), WEST)
                 .waitSeconds(.1);
         //advance to submersible to hang specimen        
         TrajectoryActionBuilder tab5 = tab4.endTrajectory().fresh()
+                .waitSeconds(2)
+                .setTangent(NORTH)
                 .splineTo(new Vector2d(-47, 0), 0)
                 .waitSeconds(.1)
-                .splineTo(new Vector2d(-38.5, 6), 0)
-                .setTangent(0);
+                .splineTo(new Vector2d(-38.5, 6), 0);
 
 
         //TrajectoryActionBuilder tab6 = tab2.endTrajectory().fresh()
