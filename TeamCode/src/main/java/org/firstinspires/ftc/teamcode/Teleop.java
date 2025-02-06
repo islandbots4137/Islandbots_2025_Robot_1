@@ -41,7 +41,7 @@ public class Teleop extends LinearOpMode {
 
         int startpos = 0;
         int mediumpos = -1300;
-        int maxpos = -5000;
+        int maxpos = -5400;//-5000;
         int hangpos = -4700;
         int wall_pickup_extend = 300;
         int elementRotateStart = -4700;
