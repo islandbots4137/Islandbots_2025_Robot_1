@@ -37,14 +37,14 @@ public class Teleop2025 extends LinearOpMode {
         grabber.setDirection(Servo.Direction.FORWARD);
 
         slideExtend.setDirection(DcMotorSimple.Direction.REVERSE);
-        slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideRotate.setDirection(DcMotorSimple.Direction.FORWARD);
 
         int RotateStartPos = 0;
-        int RotateMediumPos = -1300;
-        int RotateMaxPos = -5000;
+        int RotateMediumPos = 1300;
+        int RotateMaxPos = 5000;
         int wall_pickup_extend = 300;
-        int elementRotateStart = -5000;
-        int elementRotateEnd = -2500;
+        int elementRotateStart = 5000;
+        int elementRotateEnd = 2500;
         int elementExtendStart = 600;
         int elementExtendEnd = 0;
         double grabber_open = .65;
@@ -79,7 +79,7 @@ public class Teleop2025 extends LinearOpMode {
 
             telemetry.update();
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double x = gamepad1.left_stick_x; //
             double rx = gamepad1.right_stick_x;
             //double b = gamepad2.left_stick_y * 1.1;
             //boolean c = gamepad2.square;
@@ -94,15 +94,15 @@ public class Teleop2025 extends LinearOpMode {
             double backRightPower = (y + x - rx) / denominator;
             //slow mode
             if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-                frontLeftMotor.setPower(frontLeftPower/2);
-                backLeftMotor.setPower(backLeftPower/2);
-                frontRightMotor.setPower(frontRightPower/2);
-                backRightMotor.setPower(backRightPower/2);
-            } else {
                 frontLeftMotor.setPower(frontLeftPower);
                 backLeftMotor.setPower(backLeftPower);
                 frontRightMotor.setPower(frontRightPower);
                 backRightMotor.setPower(backRightPower);
+            } else {
+                frontLeftMotor.setPower(frontLeftPower/2);
+                backLeftMotor.setPower(backLeftPower/2);
+                frontRightMotor.setPower(frontRightPower/2);
+                backRightMotor.setPower(backRightPower/2);
             }
             // **********************************
             //special buttons 
