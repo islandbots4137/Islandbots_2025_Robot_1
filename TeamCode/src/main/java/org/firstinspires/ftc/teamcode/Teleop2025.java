@@ -37,12 +37,14 @@ public class Teleop2025 extends LinearOpMode {
         grabber.setDirection(Servo.Direction.FORWARD);
 
         slideExtend.setDirection(DcMotorSimple.Direction.REVERSE);
+        slideExtend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideRotate.setDirection(DcMotorSimple.Direction.FORWARD);
 
         int RotateStartPos = 0;
         int RotateMediumPos = 1300;
         int RotateMaxPos = 5000;
-        int wall_pickup_extend = 300;
+        int RotateHangPos = 5800;
+        int wall_pickup_extend = 50;
         int elementRotateStart = 5000;
         int elementRotateEnd = 2500;
         int elementExtendStart = 600;
@@ -51,14 +53,13 @@ public class Teleop2025 extends LinearOpMode {
         double grabber_close = .2;
         double grabber_up = .4;
         double grabber_down = .6;
+        double grabber_hang = 0.5;
         int maxSlideExtend = 1900;
 
 
         slideRotate.setTargetPosition(RotateStartPos);
         slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-//        slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         grabber.setPosition(grabber_open);
@@ -81,9 +82,7 @@ public class Teleop2025 extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
             double x = gamepad1.left_stick_x; //
             double rx = gamepad1.right_stick_x;
-            //double b = gamepad2.left_stick_y * 1.1;
-            //boolean c = gamepad2.square;
-
+            
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
@@ -106,6 +105,14 @@ public class Teleop2025 extends LinearOpMode {
             }
             // **********************************
             //special buttons 
+            //starting position: linear slide horizontal, fully retracted
+            if (gamepad2.circle) {
+                slideExtend.setTargetPosition(0);
+                slideRotate.setTargetPosition(RotateStartPos);
+                slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slideExtend.setPower(1.0);  
+                slideRotate.setPower(1.0);
+            }
             // for picking specimens from the wall
             if (gamepad2.cross) {
                 slideRotate.setTargetPosition(RotateMediumPos);
@@ -124,7 +131,7 @@ public class Teleop2025 extends LinearOpMode {
             //one-button sequence for placing specimens on the bar 
             if (gamepad2.square) {
                 //setToPosition
-                clawRotate.setPosition(grabber_up);
+                clawRotate.setPosition(grabber_hang);
                 slideExtend.setTargetPosition(elementExtendStart);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 slideRotate.setTargetPosition(elementRotateStart);
@@ -138,14 +145,24 @@ public class Teleop2025 extends LinearOpMode {
                 clawRotate.setPosition(grabber_down);
                 slideExtend.setTargetPosition(elementExtendEnd);
             }
-            //starting position: linear slide horizontal, fully retracted
-            if (gamepad2.circle) {
-                slideExtend.setTargetPosition(0);
-                slideRotate.setTargetPosition(RotateStartPos);
+            // Dpad: robot ascent/hanging
+            if (gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_right) {
+                slideExtend.setTargetPosition(1700);
+                slideRotate.setTargetPosition(hangpos);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideExtend.setPower(1.0);  // Move towards target
-                slideRotate.setPower(1.0);
+                slideExtend.setPower(1);
+                slideRotate.setPower(1);
+                while (slideRotate.isBusy() || slideExtend.isBusy()) {
+                    //just wait 
+                }
+
+                slideExtend.setTargetPosition(1100);
+                while (slideExtend.isBusy()) {
+                    //just wait 
+                }
+                slideRotate.setTargetPosition(0);
             }
+
             // **********************************
             // Claw controls 
             if (gamepad2.right_bumper) {
@@ -166,14 +183,14 @@ public class Teleop2025 extends LinearOpMode {
             extpos = slideExtend.getCurrentPosition();
             rotpos = slideRotate.getCurrentPosition();
             //FIXME: defined constants
-            if (rotpos < -1200) {
+            if (rotpos > 1200) {
                 maxSlideExtend = 2370;
             } else {
                 maxSlideExtend = 1900;
             }
-            //set slide extend motor mode 
-            if (slideExtend.getMode() == DcMotor.RunMode.RUN_TO_POSITION && slideExtend.isBusy() == false ){
-                //extend motor was in RUN_TO_POSITION mode, but has reached the target position 
+            //if slide extend motor was  in RUN_TO_POSITION mode but driver presses manual override
+            if (slideExtend.getMode() == DcMotor.RunMode.RUN_TO_POSITION && Math.abs(slideExtendPower)>0.3){
+                //override - switvh to manual mode
                 slideExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
             if (slideExtend.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
@@ -186,12 +203,7 @@ public class Teleop2025 extends LinearOpMode {
                     slideExtend.setPower(0);
                 }
             }
-            if (slideRotate.isBusy()) {
-                slideRotate.setPower(1);  // Move towards target
-            } else {
-                slideRotate.setPower(0);  // Stop when target is reached
-            }
-
+            
 
 
 
