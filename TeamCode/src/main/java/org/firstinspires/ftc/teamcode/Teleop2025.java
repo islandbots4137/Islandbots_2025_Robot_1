@@ -23,7 +23,7 @@ public class Teleop2025 extends LinearOpMode {
         Servo grabber = hardwareMap.servo.get("grabber");
 
 
-        // Reverse the left side motors. 
+        // Reverse the left side motors.
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -78,7 +78,7 @@ public class Teleop2025 extends LinearOpMode {
             double y = -gamepad1.left_stick_y; //front-back;  remember, Y stick value is reversed
             double x = gamepad1.left_stick_x; //left-right
             double rx = gamepad1.right_stick_x;//rotation
-            
+
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio,
             // but only if at least one is out of the range [-1, 1]
@@ -100,13 +100,13 @@ public class Teleop2025 extends LinearOpMode {
                 backRightMotor.setPower(backRightPower/2);
             }
             // **********************************
-            //special buttons 
+            //special buttons
             //starting position: linear slide horizontal, fully retracted
             if (gamepad2.circle) {
                 slideExtend.setTargetPosition(0);
                 slideRotate.setTargetPosition(RotateStartPos);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideExtend.setPower(1.0);  
+                slideExtend.setPower(1.0);
                 slideRotate.setPower(1.0);
             }
             // for picking specimens from the wall
@@ -114,7 +114,7 @@ public class Teleop2025 extends LinearOpMode {
                 slideRotate.setTargetPosition(RotateMediumPos);
                 slideExtend.setTargetPosition(wall_pickup_extend);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideExtend.setPower(1.0);  
+                slideExtend.setPower(1.0);
                 slideRotate.setPower(1.0);
                 clawRotate.setPosition(grabber_up);
                 grabber.setPosition(grabber_open);
@@ -124,7 +124,7 @@ public class Teleop2025 extends LinearOpMode {
                 slideRotate.setTargetPosition(RotateMaxPos);
                 slideRotate.setPower(1.0);
             }
-            //one-button sequence for placing specimens on the bar 
+            //one-button sequence for placing specimens on the bar
             if (gamepad2.square) {
                 //setToPosition
                 clawRotate.setPosition(grabber_hang);
@@ -134,7 +134,7 @@ public class Teleop2025 extends LinearOpMode {
                 slideExtend.setPower(1.0);  // Move towards target
                 slideRotate.setPower(1.0);
                 while (slideExtend.isBusy() || slideRotate.isBusy()) {
-                  //just wait 
+                    //just wait
                 }
                 //now, rotate slide  down to hang the specimen
                 slideRotate.setTargetPosition(elementRotateEnd);
@@ -144,23 +144,23 @@ public class Teleop2025 extends LinearOpMode {
             // Dpad: robot ascent/hanging
             if (gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_right) {
                 slideExtend.setTargetPosition(1700);
-                slideRotate.setTargetPosition(hangpos);
+                slideRotate.setTargetPosition(RotateHangPos);
                 slideExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 slideExtend.setPower(1);
                 slideRotate.setPower(1);
                 while (slideRotate.isBusy() || slideExtend.isBusy()) {
-                    //just wait 
+                    //just wait
                 }
 
                 slideExtend.setTargetPosition(1100);
                 while (slideExtend.isBusy()) {
-                    //just wait 
+                    //just wait
                 }
                 slideRotate.setTargetPosition(0);
             }
 
             // **********************************
-            // Claw controls 
+            // Claw controls
             if (gamepad2.right_bumper) {
                 grabber.setPosition(grabber_open);
             }
@@ -174,7 +174,7 @@ public class Teleop2025 extends LinearOpMode {
                 clawRotate.setPosition(grabber_down);
             }
             // **********************************
-            //manual slide extension 
+            //manual slide extension
             double slideExtendPower =  -gamepad2.right_stick_y;
             extpos = slideExtend.getCurrentPosition();
             rotpos = slideRotate.getCurrentPosition();
@@ -199,7 +199,7 @@ public class Teleop2025 extends LinearOpMode {
                     slideExtend.setPower(0);
                 }
             }
-            
+
 
 
 

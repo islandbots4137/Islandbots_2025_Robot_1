@@ -161,7 +161,7 @@ public class Auto2025 extends LinearOpMode {
         //moving back from submersible
         TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
                 .waitSeconds(.1)
-                .setTangent(SOUTH) 
+                .setTangent(SOUTH) //start in the negative direction of y axis
                 .splineToConstantHeading(new Vector2d(-68, 0), 0);
 
         //going to side wall for second speciment         
@@ -169,20 +169,19 @@ public class Auto2025 extends LinearOpMode {
                 .waitSeconds(.1)
                 .setTangent(EAST)
                 .splineToSplineHeading(new Pose2d(-68, -40, EAST), EAST)
-                .waitSeconds(.2)
+                .waitSeconds(.1)
                 .splineToSplineHeading(new Pose2d(-68, -66, EAST), EAST);
 
         //going back to submersible 
         TrajectoryActionBuilder  tab4 = tab3.endTrajectory().fresh()
                 .waitSeconds(.1)
                 .setTangent(WEST)
-                .splineToSplineHeading(new Pose2d(-50, 2, NORTH), WEST)
+                .splineToSplineHeading(new Pose2d(-55, 2, NORTH + Math.PI/12), WEST)
                 .waitSeconds(.1);
         //advance to submersible to hang specimen        
         TrajectoryActionBuilder tab5 = tab4.endTrajectory().fresh()
-                .waitSeconds(.1)
                 .setTangent(NORTH)
-                .splineToSplineHeading(new Pose2d(-37, 2, NORTH), NORTH);
+                .splineToSplineHeading(new Pose2d(-37, 2, NORTH + Math.PI/12), NORTH);
 
         //TrajectoryActionBuilder tab6 = tab2.endTrajectory().fresh()
         //        .waitSeconds(.1)
@@ -193,12 +192,18 @@ public class Auto2025 extends LinearOpMode {
 
 
         TrajectoryActionBuilder  tab6 = tab5.endTrajectory().fresh()
-                .waitSeconds(0.1)
-                .setTangent(SOUTH) 
+
+                .setTangent(SOUTH) //start in the negative direction of y axis
                 .splineToSplineHeading(new Pose2d(-44, -40, WEST), EAST)
-                .waitSeconds(0.1)
+
                 .setTangent(NORTH)
-                .splineToSplineHeading(new Pose2d(-10, -53, WEST), EAST);
+                .splineToSplineHeading(new Pose2d(-10, -44, WEST), EAST)
+
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-10, -50, WEST), EAST)
+
+                .setTangent(SOUTH)
+                .splineToConstantHeading(new Vector2d(-70, -60), SOUTH);
 
 
         // now, build trajectories, turning TrajectoryActionBuilder to Action:
@@ -219,26 +224,29 @@ public class Auto2025 extends LinearOpMode {
                         slide.setSlide(1300, 2820),
                         move1, //go to the submersible,
                         slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(200, 2820), //retract the slide, hanging the specimen
+                        slide.setSlide(200, 2720), //retract the slide, hanging the specimen
                         slide.setClaw(grabber_open, grabber_down),
                         move2, //move back to avoid collisions
                         slide.setClaw(grabber_open, grabber_up),
                         new ParallelAction(
-                            slide.setSlide(150, 1250), //put slide in position to pick up second
+                            slide.setSlide(250, 1300), //put slide in position to pick up second
+                            slide.setClaw(grabber_open, grabber_up),
                             move3
                         ), //move to pick up the second specimen
                         slide.setClaw(grabber_close, grabber_up),//pick up specimen
-                        slide.setSlide(150, 2800),
-                        move4, //moves to submersible again
-                        slide.setSlide(1175, 2800),
-                        move5, //approach submersible for hanging specimen
+                        new ParallelAction( //decrease rotateVal and increase extend Val if needed.
+                                slide.setSlide(250, 2800),
+                                move4
+                        ),
+
+                         //moves to submersible again
+                        slide.setSlide(1300, 2800),
+                        move5, //apporach submersible for hanging specimen
                         slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(50, 2800), //retract the slide, hanging the specimen
+                        slide.setSlide(500, 2800), //retract the slide, hanging the specimen
                         slide.setClaw(grabber_open,grabber_down),
-                        new ParallelAction(                        
-                            move6,
-                            slide.setSlide(0, 0)
-                        )
+                        move6,
+                        slide.setSlide(0, 0)
 
                 )
         );

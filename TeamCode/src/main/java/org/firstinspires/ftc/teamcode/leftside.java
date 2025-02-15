@@ -215,3 +215,5 @@ public class leftside extends LinearOpMode {
 
     }
 }
+//Completely change into a proper left side auto;w preload a yellow, put on top basket, then get the three on the field in top basket, then park.
+//Should end with a 35 pt auto, if accurate could be better than right side(23 pts, plus one in the human player zone).
