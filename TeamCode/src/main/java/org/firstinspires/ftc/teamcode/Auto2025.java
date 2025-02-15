@@ -161,7 +161,7 @@ public class Auto2025 extends LinearOpMode {
         //moving back from submersible
         TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
                 .waitSeconds(.1)
-                .setTangent(SOUTH) //start in the negative direction of y axis
+                .setTangent(SOUTH) 
                 .splineToConstantHeading(new Vector2d(-68, 0), 0);
 
         //going to side wall for second speciment         
@@ -194,7 +194,7 @@ public class Auto2025 extends LinearOpMode {
 
         TrajectoryActionBuilder  tab6 = tab5.endTrajectory().fresh()
                 .waitSeconds(0.1)
-                .setTangent(SOUTH) //start in the negative direction of y axis
+                .setTangent(SOUTH) 
                 .splineToSplineHeading(new Pose2d(-44, -40, WEST), EAST)
                 .waitSeconds(0.1)
                 .setTangent(NORTH)
@@ -231,12 +231,14 @@ public class Auto2025 extends LinearOpMode {
                         slide.setSlide(150, 2800),
                         move4, //moves to submersible again
                         slide.setSlide(1175, 2800),
-                        move5, //apporach submersible for hanging specimen
+                        move5, //approach submersible for hanging specimen
                         slide.setClaw(grabber_close, grabber_down),
                         slide.setSlide(50, 2800), //retract the slide, hanging the specimen
                         slide.setClaw(grabber_open,grabber_down),
-                        move6,
-                        slide.setSlide(0, 0)
+                        new ParallelAction(                        
+                            move6,
+                            slide.setSlide(0, 0)
+                        )
 
                 )
         );
