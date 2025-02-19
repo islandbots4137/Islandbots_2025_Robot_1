@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 //import org.openftc.apriltag.AprilTagDetection;
 
+
 import java.util.ArrayList;
 @Config
 @Autonomous(name = "OneHangAuto", group = "Autonomous")
@@ -59,7 +60,7 @@ public class leftside extends LinearOpMode {
             slideExtend = hardwareMap.dcMotor.get("slideExtend");
             slideRotate = hardwareMap.dcMotor.get("slideRotate");
             slideExtend.setDirection(DcMotorSimple.Direction.REVERSE);
-            slideRotate.setDirection(DcMotorSimple.Direction.REVERSE);
+            slideRotate.setDirection(DcMotorSimple.Direction.FORWARD);
             slideRotate.setTargetPosition(0);
             slideRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slideRotate.setPower(1.0);
@@ -107,8 +108,8 @@ public class leftside extends LinearOpMode {
     @Override
     public void runOpMode() {
         int startpos = 0;
-        int mediumpos = -1300;
-        int maxpos = -5000;
+        int mediumpos = 1300;
+        int maxpos = 5000;
         double grabber_open = .65;
         double grabber_close = .1;
         double grabber_up = .4;
@@ -116,6 +117,11 @@ public class leftside extends LinearOpMode {
         int elementExtendEnd = 0;
         double grabber_down = .6;
         int maxSlideExtend = 2370;
+        // headings
+        double NORTH = 0;
+        double EAST = - Math.PI/2;
+        double SOUTH = - Math.PI;
+        double WEST = Math.PI/2;
 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
@@ -136,64 +142,25 @@ public class leftside extends LinearOpMode {
 
         //moving in position to hang specimen
         TrajectoryActionBuilder tab0 = drive.actionBuilder(initialPose)
-                .waitSeconds(12)
-                .splineToConstantHeading(new Vector2d(-70, 0), 0);
+                .setTangent(WEST)
+                .turn(WEST)
 
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .splineToConstantHeading(new Vector2d(-37, 0), 0);
+                .splineToSplineHeading(new Pose2d(-80, 68, WEST), WEST);
+
+        TrajectoryActionBuilder tab1 = tab0.endTrajectory().fresh()
+                .setTangent(NORTH)
+                .splineToSplineHeading(new Pose2d(-30, 50, WEST), NORTH);
         //.strafeTo(new Vector2d(20, 20));
-
-        //moving to pick up next specimen from the wall
-        TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
-                .waitSeconds(0.1)
-                .setTangent(-Math.PI ) //start in the negative direction of y axis
-                .splineToConstantHeading(new Vector2d(-65, 0), 0);
-
-        TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
-                .waitSeconds(0.1)
-                .setTangent(-Math.PI/2 )
-                .splineToLinearHeading(new Pose2d(-65, -65, -Math.PI/2), -Math.PI/2)
-                .waitSeconds(.2);
-        TrajectoryActionBuilder  tab4 = tab2.endTrajectory().fresh()
-                .waitSeconds(0.1)
-                .setTangent(-Math.PI/2)
-                .splineToLinearHeading(new Pose2d(-65, -40, -Math.PI/2), -Math.PI/2)
-                .waitSeconds(.2)
-                .splineToLinearHeading(new Pose2d(-56.5, -65, -Math.PI/2), -Math.PI/2)
-                .waitSeconds(.2);
-
-        TrajectoryActionBuilder  tab5 = tab2.endTrajectory().fresh()
-                .waitSeconds(0.1)
-                .splineTo(new Vector2d(-55, 0), 0)
-                .waitSeconds(.1)
-                .splineTo(new Vector2d(-54, 0), 0)
-                .waitSeconds(.1)
-                .splineTo(new Vector2d(-38, 20), 0)
-                .setTangent(0);
-
-
-        //TrajectoryActionBuilder tab6 = tab2.endTrajectory().fresh()
-        //        .waitSeconds(.1)
-        //        .splineTo(new Vector2d(-70, 0), 0)
-        //        .waitSeconds(.1)
-        //        .splineTo(new Vector2d(-70, -75), 0);
-
-
-
-        TrajectoryActionBuilder  tab6 = tab2.endTrajectory().fresh()
-                .waitSeconds(0.1)
-                .setTangent(-Math.PI /2 ) //start in the negative direction of y axis
-                .splineTo(new Vector2d(-71, -71), 0);
 
 
         // now, build trajectories, turning TrajectoryActionBuilder to Action:
         Action move0 = tab0.build();
         Action move1 = tab1.build();
-        Action move2 = tab2.build();
-        Action move3 = tab3.build();
-        Action move4 = tab4.build();
-        Action move5 = tab5.build();
-        Action move6 = tab6.build();
+        //Action move2 = tab2.build();
+        //Action move3 = tab3.build();
+        //Action move4 = tab4.build();
+        //Action move5 = tab5.build();
+        //Action move6 = tab6.build();
         //Action move3 = tab3.build();
 
         waitForStart();
@@ -202,18 +169,15 @@ public class leftside extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(1200, -3100),
+                        slide.setSlide(2400, 5000),
                         move0,
-                        move1, //go to the submersible,
-                        slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(200, -2800), //retract the slide, hanging the specimen
+                        slide.setClaw(grabber_open, grabber_up),
+                        move1
 
-                        move6
-                        //move3 //go to pick up the second specimen
                 )
         );
 
     }
 }
-//Completely change into a proper left side auto;w preload a yellow, put on top basket, then get the three on the field in top basket, then park.
+//Completely change into a proper left side auto; preload a yellow, put on top basket, then get the three on the field in top basket, then park.
 //Should end with a 35 pt auto, if accurate could be better than right side(23 pts, plus one in the human player zone).

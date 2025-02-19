@@ -162,15 +162,15 @@ public class Auto2025 extends LinearOpMode {
         TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
                 .waitSeconds(.1)
                 .setTangent(SOUTH) //start in the negative direction of y axis
-                .splineToConstantHeading(new Vector2d(-68, 0), 0);
+                .splineToConstantHeading(new Vector2d(-70, 0), 0);
 
         //going to side wall for second speciment         
         TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
                 .waitSeconds(.1)
                 .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-68, -40, EAST), EAST)
+                .splineToSplineHeading(new Pose2d(-70, -40, EAST), EAST)
                 .waitSeconds(.1)
-                .splineToSplineHeading(new Pose2d(-68, -66, EAST), EAST);
+                .splineToSplineHeading(new Pose2d(-70, -66, EAST), EAST);
 
         //going back to submersible 
         TrajectoryActionBuilder  tab4 = tab3.endTrajectory().fresh()
@@ -200,7 +200,7 @@ public class Auto2025 extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-10, -44, WEST), EAST)
 
                 .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-10, -50, WEST), EAST)
+                .splineToSplineHeading(new Pose2d(-10, -48, WEST), EAST)
 
                 .setTangent(SOUTH)
                 .splineToConstantHeading(new Vector2d(-70, -60), SOUTH);
@@ -229,7 +229,7 @@ public class Auto2025 extends LinearOpMode {
                         move2, //move back to avoid collisions
                         slide.setClaw(grabber_open, grabber_up),
                         new ParallelAction(
-                            slide.setSlide(250, 1300), //put slide in position to pick up second
+                            slide.setSlide(230, 1280), //put slide in position to pick up second
                             slide.setClaw(grabber_open, grabber_up),
                             move3
                         ), //move to pick up the second specimen
@@ -240,7 +240,7 @@ public class Auto2025 extends LinearOpMode {
                         ),
 
                          //moves to submersible again
-                        slide.setSlide(1300, 2800),
+                        slide.setSlide(1250, 2750),
                         move5, //apporach submersible for hanging specimen
                         slide.setClaw(grabber_close, grabber_down),
                         slide.setSlide(500, 2800), //retract the slide, hanging the specimen

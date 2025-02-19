@@ -37,17 +37,17 @@ public class Teleop2025 extends LinearOpMode {
         slideRotate.setDirection(DcMotorSimple.Direction.FORWARD);
 
         int RotateStartPos = 0;
-        int RotateMediumPos = 1300;
+        int RotateMediumPos = 1230;
         int RotateMaxPos = 5000;
-        int RotateHangPos = 5800;
-        int wall_pickup_extend = 50;
-        int elementRotateStart = 5000;
+        int RotateHangPos = 6000;
+        int wall_pickup_extend = 100;
+        int elementRotateStart = 4500;
         int elementRotateEnd = 2500;
-        int elementExtendStart = 600;
+        int elementExtendStart = 625;
         int elementExtendEnd = 0;
         double grabber_open = .65;
-        double grabber_close = .2;
-        double grabber_up = .4;
+        double grabber_close = .15;
+        double grabber_up = .35;
         double grabber_down = .6;
         double grabber_hang = 0.5;
         int maxSlideExtend = 1900;
