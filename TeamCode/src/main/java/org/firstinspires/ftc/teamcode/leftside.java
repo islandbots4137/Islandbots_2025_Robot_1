@@ -149,19 +149,76 @@ public class leftside extends LinearOpMode {
 
         TrajectoryActionBuilder tab1 = tab0.endTrajectory().fresh()
                 .setTangent(NORTH)
-                .splineToSplineHeading(new Pose2d(-30, 50, WEST), NORTH);
-        //.strafeTo(new Vector2d(20, 20));
+                .splineToSplineHeading(new Pose2d(-40, 48, WEST), NORTH);
+
+        TrajectoryActionBuilder tab2 = tab1.endTrajectory().fresh()
+                .setTangent(NORTH)
+                .turn(EAST)
+                .splineToSplineHeading(new Pose2d(-37, 48, NORTH), NORTH)
+                .waitSeconds(1)
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-37, 47, NORTH), EAST)
+                .waitSeconds(.1);
+
+        TrajectoryActionBuilder tab3 = tab2.endTrajectory().fresh()
+                .waitSeconds(2)
+                .setTangent(SOUTH)
+                .splineToSplineHeading(new Pose2d(-80, 30, WEST), SOUTH)
+                .waitSeconds(2);
+
+
+        TrajectoryActionBuilder tab4 = tab3.endTrajectory().fresh()
+                .setTangent(WEST)
+                .splineToSplineHeading(new Pose2d(-80, 71, WEST), WEST)
+                .waitSeconds(1);
+
+
+        TrajectoryActionBuilder tab5 = tab4.endTrajectory().fresh()
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-45, 67, NORTH), EAST)
+                .waitSeconds(1)
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-37, 67, NORTH), EAST)
+                .waitSeconds(1);
+        TrajectoryActionBuilder tab6 = tab5.endTrajectory().fresh()
+                .waitSeconds(1)
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-37, 57, NORTH), EAST)
+                .waitSeconds(1);
+
+        TrajectoryActionBuilder tab7 = tab6.endTrajectory().fresh()
+                .waitSeconds(.1)
+                .turn(WEST)
+                .setTangent(SOUTH)
+                .splineToSplineHeading(new Pose2d(-80, 20, WEST), SOUTH)
+                .waitSeconds(.1)
+                .splineToSplineHeading(new Pose2d(-80, 25, WEST), SOUTH)
+                .waitSeconds(.1);
+
+        TrajectoryActionBuilder tab8 = tab7.endTrajectory().fresh()
+                .waitSeconds(.1)
+                .setTangent(SOUTH)
+                .splineToSplineHeading(new Pose2d(-80, 70, WEST), SOUTH)
+                .waitSeconds(.1);
+
+        TrajectoryActionBuilder tab9 = tab8.endTrajectory().fresh()
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-80, -80, WEST), EAST)
+                .waitSeconds(.1);
+
 
 
         // now, build trajectories, turning TrajectoryActionBuilder to Action:
         Action move0 = tab0.build();
         Action move1 = tab1.build();
-        //Action move2 = tab2.build();
-        //Action move3 = tab3.build();
-        //Action move4 = tab4.build();
-        //Action move5 = tab5.build();
-        //Action move6 = tab6.build();
-        //Action move3 = tab3.build();
+        Action move2 = tab2.build();
+        Action move3 = tab3.build();
+        Action move4 = tab4.build();
+        Action move5 = tab5.build();
+        Action move6 = tab6.build();
+        Action move7 = tab7.build();
+        Action move8 = tab8.build();
+        Action move9 = tab9.build();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -172,7 +229,32 @@ public class leftside extends LinearOpMode {
                         slide.setSlide(2400, 5000),
                         move0,
                         slide.setClaw(grabber_open, grabber_up),
-                        move1
+                        move1,
+                        slide.setClaw(grabber_open, grabber_up),
+                        slide.setSlide(0, 0),
+                        move2,
+                        slide.setClaw(grabber_open, grabber_down),
+                        slide.setClaw(grabber_close, grabber_down),
+                        move3,
+                        slide.setClaw(grabber_close, grabber_up),
+                        slide.setSlide(2400, 5000),
+                        move4,//returned to basket to place
+                        slide.setClaw(grabber_open, grabber_up),
+                        move5,
+                        slide.setClaw(grabber_open, grabber_up),
+                        slide.setSlide(0, 0),
+                        move6,
+                        slide.setClaw(grabber_open, grabber_down),
+                        slide.setClaw(grabber_close, grabber_down),
+                        move7,
+                        slide.setClaw(grabber_close, grabber_up),
+                        slide.setSlide(2400, 5000),
+                        move8,
+                        slide.setClaw(grabber_open, grabber_up),
+                        move9,
+                        slide.setClaw(grabber_open, grabber_down),
+                        slide.setSlide(0, 0)
+
 
                 )
         );
