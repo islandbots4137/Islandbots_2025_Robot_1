@@ -124,6 +124,7 @@ public class Auto2025 extends LinearOpMode {
         // headings 
         double NORTH = 0;
         double EAST = - Math.PI/2;
+        double SOUTHEAST = - Math.PI * 0.75;
         double SOUTH = - Math.PI;
         double WEST = Math.PI/2;
 
@@ -199,10 +200,7 @@ public class Auto2025 extends LinearOpMode {
                 .setTangent(NORTH)
                 .splineToSplineHeading(new Pose2d(-10, -44, WEST), EAST)
 
-                .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-10, -48, WEST), EAST)
-
-                .setTangent(SOUTH)
+                .setTangent(SOUTHEAST)
                 .splineToConstantHeading(new Vector2d(-70, -60), SOUTH);
 
 
