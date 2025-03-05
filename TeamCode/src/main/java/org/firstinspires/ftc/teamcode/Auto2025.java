@@ -44,7 +44,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
 @Config
-@Autonomous(name = "RightAuto2", group = "Autonomous")
+@Autonomous(name = "2HangAuto", group = "Autonomous")
 
 public class Auto2025 extends LinearOpMode {
 

@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
 @Config
-@Autonomous(name = "OneHangAuto", group = "Autonomous")
+@Autonomous(name = "3BasketAuto", group = "Autonomous")
 
 public class leftside extends LinearOpMode {
 
