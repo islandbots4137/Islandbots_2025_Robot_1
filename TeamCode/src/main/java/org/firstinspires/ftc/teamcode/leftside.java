@@ -158,19 +158,19 @@ public class leftside extends LinearOpMode {
                 .waitSeconds(1)
                 .setTangent(EAST)
                 .splineToSplineHeading(new Pose2d(-37, 47, NORTH), EAST)
-                .waitSeconds(.1);
+                .waitSeconds(.5);
 
         TrajectoryActionBuilder tab3 = tab2.endTrajectory().fresh()
-                .waitSeconds(2)
+                .waitSeconds(.5)
                 .setTangent(SOUTH)
                 .splineToSplineHeading(new Pose2d(-80, 30, WEST), SOUTH)
-                .waitSeconds(2);
+                .waitSeconds(.1);
 
 
         TrajectoryActionBuilder tab4 = tab3.endTrajectory().fresh()
                 .setTangent(WEST)
                 .splineToSplineHeading(new Pose2d(-80, 71, WEST), WEST)
-                .waitSeconds(1);
+                .waitSeconds(.5);
 
 
         TrajectoryActionBuilder tab5 = tab4.endTrajectory().fresh()
@@ -181,13 +181,12 @@ public class leftside extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-37, 67, NORTH), EAST)
                 .waitSeconds(1);
         TrajectoryActionBuilder tab6 = tab5.endTrajectory().fresh()
-                .waitSeconds(1)
+                .waitSeconds(.1)
                 .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-37, 57, NORTH), EAST)
-                .waitSeconds(1);
+                .splineToSplineHeading(new Pose2d(-37, 57, NORTH), EAST);
 
         TrajectoryActionBuilder tab7 = tab6.endTrajectory().fresh()
-                .waitSeconds(.1)
+                .waitSeconds(.5)
                 .turn(WEST)
                 .setTangent(SOUTH)
                 .splineToSplineHeading(new Pose2d(-80, 20, WEST), SOUTH)
@@ -196,7 +195,7 @@ public class leftside extends LinearOpMode {
                 .waitSeconds(.1);
 
         TrajectoryActionBuilder tab8 = tab7.endTrajectory().fresh()
-                .waitSeconds(.1)
+                .waitSeconds(.5)
                 .setTangent(SOUTH)
                 .splineToSplineHeading(new Pose2d(-80, 70, WEST), SOUTH)
                 .waitSeconds(.1);
@@ -225,31 +224,41 @@ public class leftside extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(2400, 5000),
-                        move0,
+                        new ParallelAction(
+                            slide.setClaw(grabber_close, grabber_up),
+                            slide.setSlide(2400, 5000),
+                            move0
+                        ),
                         slide.setClaw(grabber_open, grabber_up),
                         move1,
-                        slide.setClaw(grabber_open, grabber_up),
-                        slide.setSlide(0, 0),
-                        move2,
+                        new ParallelAction(
+                            slide.setClaw(grabber_open, grabber_up),
+                            slide.setSlide(0, 0),
+                            move2
+                        ),
                         slide.setClaw(grabber_open, grabber_down),
                         slide.setClaw(grabber_close, grabber_down),
                         move3,
-                        slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(2400, 5000),
+                        new ParallelAction(
+                            slide.setClaw(grabber_close, grabber_up),
+                            slide.setSlide(2400, 5000)
+
+                        ),
                         move4,//returned to basket to place
                         slide.setClaw(grabber_open, grabber_up),
                         move5,
-                        slide.setClaw(grabber_open, grabber_up),
-                        slide.setSlide(0, 0),
-                        move6,
+                        new ParallelAction(
+                            slide.setSlide(0, 0),
+                            move6
+                                ),
                         slide.setClaw(grabber_open, grabber_down),
                         slide.setClaw(grabber_close, grabber_down),
                         move7,
-                        slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(2400, 5000),
-                        move8,
+                        new ParallelAction(
+                            slide.setClaw(grabber_close, grabber_up),
+                            slide.setSlide(2400, 5000),
+                            move8
+                        ),
                         slide.setClaw(grabber_open, grabber_up),
                         move9,
                         slide.setClaw(grabber_open, grabber_down),

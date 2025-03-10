@@ -46,7 +46,7 @@ public class Teleop2025 extends LinearOpMode {
         int elementExtendStart = 625;
         int elementExtendEnd = 0;
         double grabber_open = .65;
-        double grabber_close = .15;
+        double grabber_close = .1;
         double grabber_up = .35;
         double grabber_down = .6;
         double grabber_hang = 0.5;
