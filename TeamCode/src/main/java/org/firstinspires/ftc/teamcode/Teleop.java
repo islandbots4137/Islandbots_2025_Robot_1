@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.concurrent.TimeUnit;
 
-@TeleOp
+//@TeleOp
 public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

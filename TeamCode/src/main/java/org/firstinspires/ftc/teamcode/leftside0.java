@@ -42,11 +42,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 //import org.openftc.apriltag.AprilTagDetection;
 
+
 import java.util.ArrayList;
 @Config
-@Autonomous(name = "2HangAuto", group = "Autonomous")
+@Autonomous(name = "2BasketAuto", group = "Autonomous")
 
-public class Auto2025 extends LinearOpMode {
+public class leftside0 extends LinearOpMode {
 
     public class LinearSlide {
         private DcMotor slideExtend;
@@ -97,11 +98,6 @@ public class Auto2025 extends LinearOpMode {
                 public boolean run(@NonNull TelemetryPacket packet) {
                     clawRotate.setPosition(clawRotateVal);
                     grabber.setPosition(grabberVal);
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     //return false (action done) right away
                     return false;
                 }
@@ -121,15 +117,12 @@ public class Auto2025 extends LinearOpMode {
         int elementExtendEnd = 0;
         double grabber_down = .6;
         int maxSlideExtend = 2370;
-        // headings 
+        // headings
         double NORTH = 0;
         double EAST = - Math.PI/2;
-        double SOUTHEAST = - Math.PI * 0.75;
         double SOUTH = - Math.PI;
         double WEST = Math.PI/2;
 
-
-        /* Not needed - it is all defined in MecanumDrive class 
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("leftBack");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("rightFront");
@@ -138,116 +131,128 @@ public class Auto2025 extends LinearOpMode {
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-         */
 
 
-        Pose2d initialPose = new Pose2d(-70, 0, NORTH);
-        /* warning: this expects that motor names in hardware map are:
-         * leftFront, leftBack, rightFront, rightBack
-         * and that the two odometry pods are plugged into these ports:
-         *  parallel: leftBack motor port 
-         *  perp = rightBack motor port 
-         * Do not rename them!
-         */
+
+        Pose2d initialPose = new Pose2d(-70, 30, Math.toRadians(0));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         LinearSlide slide = new LinearSlide(hardwareMap);
 
 
 
         //moving in position to hang specimen
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(-38, 0), NORTH);
-        //.strafeTo(new Vector2d(20, 20));
+        TrajectoryActionBuilder tab0 = drive.actionBuilder(initialPose)
+                .setTangent(WEST)
+                .turn(WEST)
 
-        //moving back from submersible
-        TrajectoryActionBuilder  tab2 = tab1.endTrajectory().fresh()
-                .waitSeconds(.1)
-                .setTangent(SOUTH) //start in the negative direction of y axis
-                .splineToConstantHeading(new Vector2d(-70, 0), 0);
+                .splineToSplineHeading(new Pose2d(-80, 68, WEST), WEST);
 
-        //going to side wall for second speciment         
-        TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
+        TrajectoryActionBuilder tab1 = tab0.endTrajectory().fresh()
+                .setTangent(NORTH)
+                .splineToSplineHeading(new Pose2d(-40, 48, WEST), NORTH);
+
+        TrajectoryActionBuilder tab2 = tab1.endTrajectory().fresh()
+                .setTangent(NORTH)
+                .turn(EAST)
+                .splineToSplineHeading(new Pose2d(-37, 48, NORTH), NORTH)
+                .waitSeconds(1)
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-37, 47, NORTH), EAST)
+                .waitSeconds(.5);
+
+        TrajectoryActionBuilder tab3 = tab2.endTrajectory().fresh()
+                .waitSeconds(.5)
+                .setTangent(SOUTH)
+                .splineToSplineHeading(new Pose2d(-78, 30, WEST), SOUTH)
+                .waitSeconds(.1);
+
+
+        TrajectoryActionBuilder tab4 = tab3.endTrajectory().fresh()
+                .setTangent(WEST)
+                .splineToSplineHeading(new Pose2d(-78, 71, WEST), WEST)
+                .waitSeconds(.5);
+
+
+        TrajectoryActionBuilder tab5 = tab4.endTrajectory().fresh()
+                .setTangent(EAST)
+                .splineToConstantHeading(new Vector2d(-78, -50), EAST)
+                .waitSeconds(.1) ;
+        TrajectoryActionBuilder tab6 = tab5.endTrajectory().fresh()
                 .waitSeconds(.1)
                 .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-70, -40, EAST), EAST)
-                .waitSeconds(.1)
-                .splineToSplineHeading(new Pose2d(-70, -66, EAST), EAST);
+                .splineToSplineHeading(new Pose2d(-37, 57, NORTH), EAST);
 
-        //going back to submersible 
-        TrajectoryActionBuilder  tab4 = tab3.endTrajectory().fresh()
+        TrajectoryActionBuilder tab7 = tab6.endTrajectory().fresh()
+                .waitSeconds(.5)
+                .turn(WEST)
+                .setTangent(SOUTH)
+                .splineToSplineHeading(new Pose2d(-80, 20, WEST), SOUTH)
                 .waitSeconds(.1)
-                .setTangent(WEST)
-                .splineToSplineHeading(new Pose2d(-55, 2, NORTH + Math.PI/12), WEST)
+                .splineToSplineHeading(new Pose2d(-80, 25, WEST), SOUTH)
                 .waitSeconds(.1);
-        //advance to submersible to hang specimen        
-        TrajectoryActionBuilder tab5 = tab4.endTrajectory().fresh()
-                .setTangent(NORTH)
-                .splineToSplineHeading(new Pose2d(-37, 2, NORTH + Math.PI/12), NORTH);
 
-        //TrajectoryActionBuilder tab6 = tab2.endTrajectory().fresh()
-        //        .waitSeconds(.1)
-        //        .splineTo(new Vector2d(-70, 0), 0)
-        //        .waitSeconds(.1)
-        //        .splineTo(new Vector2d(-70, -75), 0);
+        TrajectoryActionBuilder tab8 = tab7.endTrajectory().fresh()
+                .waitSeconds(.5)
+                .setTangent(SOUTH)
+                .splineToSplineHeading(new Pose2d(-80, 70, WEST), SOUTH)
+                .waitSeconds(.1);
 
+        TrajectoryActionBuilder tab9 = tab8.endTrajectory().fresh()
+                .setTangent(EAST)
+                .splineToSplineHeading(new Pose2d(-80, -80, WEST), EAST)
+                .waitSeconds(.1);
 
-
-        TrajectoryActionBuilder  tab6 = tab5.endTrajectory().fresh()
-
-                .setTangent(SOUTH) //start in the negative direction of y axis
-                .splineToSplineHeading(new Pose2d(-44, -40, WEST), EAST)
-
-                .setTangent(NORTH)
-                .splineToSplineHeading(new Pose2d(-10, -44, WEST), EAST)
-
-                .setTangent(SOUTHEAST)
-                .splineToConstantHeading(new Vector2d(-70, -50), SOUTH);
 
 
         // now, build trajectories, turning TrajectoryActionBuilder to Action:
+        Action move0 = tab0.build();
         Action move1 = tab1.build();
         Action move2 = tab2.build();
         Action move3 = tab3.build();
         Action move4 = tab4.build();
         Action move5 = tab5.build();
         Action move6 = tab6.build();
-        
+        Action move7 = tab7.build();
+        Action move8 = tab8.build();
+        Action move9 = tab9.build();
 
         waitForStart();
         if (isStopRequested()) return;
 
         Actions.runBlocking(
                 new SequentialAction(
-                        slide.setClaw(grabber_close, grabber_up),
-                        slide.setSlide(1300, 2820),
-                        move1, //go to the submersible,
-                        slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(600, 2720), //retract the slide, hanging the specimen
-                        slide.setClaw(grabber_open, grabber_down),
-                        move2, //move back to avoid collisions
-                        slide.setClaw(grabber_open, grabber_up),
                         new ParallelAction(
-                            slide.setSlide(230, 1280), //put slide in position to pick up second
-                            slide.setClaw(grabber_open, grabber_up),
-                            move3
-                        ), //move to pick up the second specimen
-                        slide.setClaw(grabber_close, grabber_up),//pick up specimen
-                        new ParallelAction( //decrease rotateVal and increase extend Val if needed.
-                                slide.setSlide(250, 2800),
-                                move4
+                                slide.setClaw(grabber_close, grabber_up),
+                                slide.setSlide(2400, 5000),
+                                move0
                         ),
-
-                         //moves to submersible again
-                        slide.setSlide(1250, 2750),
-                        move5, //apporach submersible for hanging specimen
+                        slide.setClaw(grabber_open, grabber_up),
+                        move1,
+                        new ParallelAction(
+                                slide.setClaw(grabber_open, grabber_up),
+                                slide.setSlide(0, 0),
+                                move2
+                        ),
+                        slide.setClaw(grabber_open, grabber_down),
                         slide.setClaw(grabber_close, grabber_down),
-                        slide.setSlide(600, 2800), //retract the slide, hanging the specimen
-                        slide.setClaw(grabber_open,grabber_down),
-                        move6,
-                        slide.setSlide(0, 0)
+                        move3,
+                        new ParallelAction(
+                                slide.setClaw(grabber_close, grabber_up),
+                                slide.setSlide(2400, 5000)
+
+                        ),
+                        move4,//returned to basket to place
+                        slide.setClaw(grabber_open, grabber_up),
+                        move5,
+                        new ParallelAction(
+                                slide.setSlide(0, 0),
+                                slide.setClaw(grabber_open, grabber_down)
+                        )
 
                 )
         );
 
     }
 }
+//Completely change into a proper left side auto; preload a yellow, put on top basket, then get the three on the field in top basket, then park.
+//Should end with a 35 pt auto, if accurate could be better than right side(23 pts, plus one in the human player zone).

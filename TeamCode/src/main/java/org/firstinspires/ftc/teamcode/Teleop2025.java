@@ -42,8 +42,8 @@ public class Teleop2025 extends LinearOpMode {
         int RotateHangPos = 6000;
         int wall_pickup_extend = 100;
         int elementRotateStart = 4500;
-        int elementRotateEnd = 2500;
-        int elementExtendStart = 625;
+        int elementRotateEnd = 2800;
+        int elementExtendStart = 600;
         int elementExtendEnd = 0;
         double grabber_open = .65;
         double grabber_close = .1;
@@ -184,9 +184,9 @@ public class Teleop2025 extends LinearOpMode {
             rotpos = slideRotate.getCurrentPosition();
             //FIXME: defined constants
             if (rotpos > 1200) {
-                maxSlideExtend = 2370;
+                maxSlideExtend = 2320;
             } else {
-                maxSlideExtend = 1900;
+                maxSlideExtend = 1700;
             }
             //if slide extend motor was  in RUN_TO_POSITION mode but driver presses manual override
             if (slideExtend.getMode() == DcMotor.RunMode.RUN_TO_POSITION && Math.abs(slideExtendPower)>0.3){
