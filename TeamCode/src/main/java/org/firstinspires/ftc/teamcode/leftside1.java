@@ -157,7 +157,7 @@ public class leftside1 extends LinearOpMode {
                 .splineToSplineHeading(new Pose2d(-38, 49, NORTH), NORTH)
                 .waitSeconds(1)
                 .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-38, 47, NORTH), EAST)
+                .splineToSplineHeading(new Pose2d(-38, 48, NORTH), EAST)
                 .waitSeconds(.5);
 
         TrajectoryActionBuilder tab3 = tab2.endTrajectory().fresh()

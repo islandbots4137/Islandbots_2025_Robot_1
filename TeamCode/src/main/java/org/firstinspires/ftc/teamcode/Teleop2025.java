@@ -59,7 +59,7 @@ public class Teleop2025 extends LinearOpMode {
 
 
         grabber.setPosition(grabber_open);
-        clawRotate.setPosition(.5); //FIXME
+        clawRotate.setPosition(.6); //FIXME
 
         waitForStart();
 

@@ -169,9 +169,9 @@ public class Auto2025 extends LinearOpMode {
         TrajectoryActionBuilder  tab3 = tab2.endTrajectory().fresh()
                 .waitSeconds(.1)
                 .setTangent(EAST)
-                .splineToSplineHeading(new Pose2d(-70, -40, EAST), EAST)
+                .splineToSplineHeading(new Pose2d(-73, -40, EAST), EAST)
                 .waitSeconds(.1)
-                .splineToSplineHeading(new Pose2d(-70, -66, EAST), EAST);
+                .splineToSplineHeading(new Pose2d(-73, -66, EAST), EAST);
 
         //going back to submersible 
         TrajectoryActionBuilder  tab4 = tab3.endTrajectory().fresh()
